@@ -95,8 +95,26 @@ Here are the steps to install the application:
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+Here are the steps to run each project. You can only run one project at a time. So if you want to run another project, then you have to stop the previous running project.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+1. Open a desired project folder
+   ```sh
+   cd [project folder]
+   ```
+2. Set app.py
+   ```sh
+   set [project folder] = app.py
+   ```
+   ```sh
+   py -3 -m venv venv
+   ```
+3. Run Flask
+   ```sh
+   flask run
+   ```
+4. Run given URL in browser, below is the default URL
+   ```sh
+   http://127.0.0.1:5000
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
