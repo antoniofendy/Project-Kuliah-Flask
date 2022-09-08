@@ -68,25 +68,29 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+Here are the steps to install the application:
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://github.com/antoniofendy/Project-Kuliah-Flask.git
    ```
-3. Install NPM packages
+2. Create Environment
    ```sh
-   npm install
+   cd [clonned repo]
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+   ```sh
+   py -3 -m venv venv
+   ```
+3. Activate Environment
+   ```sh
+   venv\Scripts\activate
+   ```
+4. Install Flask
+   ```sh
+   pip install Flask
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- USAGE EXAMPLES -->
 ## Usage
