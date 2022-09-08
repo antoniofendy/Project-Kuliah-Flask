@@ -48,15 +48,22 @@ Every project and website task in this repository is created using:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
-* npm
+* Python
   ```sh
-  npm install npm@latest -g
+  https://www.python.org/downloads/
+  ```
+* Git
+  ```sh
+  https://github.com/git-guides/install-git
+  ```
+* Code Editor (VSCode)
+  ```sh
+  https://code.visualstudio.com/Download
   ```
 
 ### Installation
