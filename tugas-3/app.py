@@ -17,16 +17,23 @@ def index():
     return render_template('index.html', templates=templates)
 
 
+# Jo Shane
+@application.route('/about')
+def about():
+    return render_template('about.html', templates=templates)
+
+
+# Jo Shane
 @application.route('/members')
 def members():
     return render_template('index.html', templates=templates)
 
 
 # Kosasi
-@application.route('/menu-1')
-def menu1():
-    ganjilGenap = GanjilGenap()
-    return render_template('hasil.html', templates=templates, data=data)
+@application.route('/ganjil-genap/<angka_1>/<angka_2>')
+def menu1(angka_1, angka_2):
+    ganjilGenap = GanjilGenap(angka_1, angka_2)
+    return render_template('hasil.html', templates=templates, ganjilGenap=ganjilGenap)
 
 
 # Fendyanto
@@ -37,13 +44,6 @@ def ganjil_genap():
             request.form['angka_1'], request.form['angka_2'])
 
     return render_template('hasil.html', templates=templates, ganjilGenap=ganjilGenap)
-
-
-# Johanes Shane
-@application.route('/ganjil-genap/<angka_1>/<angka_2>')
-def ganjil_genap_arguments(angka_1, angka_2):
-    ganjilGenap = GanjilGenap()
-    return render_template('hasil.html', templates=templates, data=data)
 
 
 if __name__ == '__main__':
