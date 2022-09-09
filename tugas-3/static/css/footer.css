@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+* {
+  font-family: 'Inter', sans-serif !important;
+}
+
+body footer {
+  background-color: #101419;
+  text-align: center;
+}
+
+body footer p {
+  font-size: 20px;
+  color: #ADB2B8;
+}
+
+@media screen and (min-width: 768px) {
+  body footer .container-fluid {
+    padding-left: 80px;
+  }
+}
