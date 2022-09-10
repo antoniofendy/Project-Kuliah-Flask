@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
-from GanjilGenap import GanjilGenap
+from ganjil_genap import GanjilGenap
 
 application = Flask(__name__)
 application.config.from_pyfile('config.cfg')
+
 header = application.config['HEADER']
 footer = application.config['FOOTER']
 
@@ -31,19 +32,19 @@ def members():
 
 # Kosasi
 @application.route('/ganjil-genap/<angka_1>/<angka_2>')
-def menu1(angka_1, angka_2):
-    ganjilGenap = GanjilGenap(angka_1, angka_2)
-    return render_template('hasil.html', templates=templates, ganjilGenap=ganjilGenap)
+def calculate(angka_1, angka_2):
+    ganjil_genap = GanjilGenap(angka_1, angka_2)
+    return render_template('hasil.html', templates=templates, ganjil_genap=ganjil_genap)
 
 
 # Fendyanto
 @application.route('/ganjil-genap', methods=['POST'])
-def ganjil_genap():
+def result():
     if request.method == 'POST':
-        ganjilGenap = GanjilGenap(
+        ganjil_genap = GanjilGenap(
             request.form['angka_1'], request.form['angka_2'])
 
-    return render_template('hasil.html', templates=templates, ganjilGenap=ganjilGenap)
+    return render_template('hasil.html', templates=templates, ganjil_genap=ganjil_genap)
 
 
 if __name__ == '__main__':
