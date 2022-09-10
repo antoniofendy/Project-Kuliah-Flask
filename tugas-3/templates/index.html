@@ -1,82 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-  <title>Flask Python</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block content %}
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}" />
-</head>
-
-<body>
-
-  <section class="abovefold overflow-hidden">
-    {{templates['header']|safe}}
-    <div class="container header">
-      <div class="row">
-        <div class="col-lg-6 px-md-0 my-auto position-relative">
-          <div class="headline">
-            Latihan Flask <span class="cl-light-blue">Tugas 3</span>
-          </div>
-          <div class="sub-headline">
-            Program sederhana penentuan angka ganjil dan genap
-          </div>
-        </div>
-        <div class="col-lg-6 mt-5 mt-md-0">
-          <div class="card">
-            <form action="{{url_for('result')}}" method="POST" onsubmit="return validasiForm()">
-              <div class="input-group mb-4">
-                <label for="input" class="w-100">
-                  <span class="input-title">Angka pertama</span>
-                  <input type="number" class="form-control mt-2" placeholder="1" id="angka-1" name="angka_1">
-                </label>
-              </div>
-              <div class="input-group mb-4">
-                <label for="input" class="w-100">
-                  <span class="input-title">Angka kedua</span>
-                  <input type="number" class="form-control mt-2" placeholder="2" id="angka-2" name="angka_2">
-                </label>
-              </div>
-              <div class="mb-4">
-                <small style="color: red;" id="error-message"></small>
-              </div>
-              <button class="btn btn-card" type="submit" style="width: 100%">
-                Cek Angka
-              </button>
-            </form>
-          </div>
-        </div>
+<div class="container header">
+  <div class="row">
+    <div class="col-lg-6 px-md-0 my-auto position-relative">
+      <div class="headline">
+        Latihan Flask <span class="cl-light-blue">Tugas 3</span>
+      </div>
+      <div class="sub-headline">
+        Program sederhana penentuan angka ganjil dan genap
       </div>
     </div>
-  </section>
+    <div class="col-lg-6 mt-5 mt-md-0">
+      <div class="card">
+        <form action="{{url_for('result')}}" method="POST" onsubmit="return validasiForm()">
+          <div class="input-group mb-4">
+            <label for="input" class="w-100">
+              <span class="input-title">Angka pertama</span>
+              <input type="number" class="form-control mt-2" placeholder="1" id="angka-1" name="angka_1">
+            </label>
+          </div>
+          <div class="input-group mb-4">
+            <label for="input" class="w-100">
+              <span class="input-title">Angka kedua</span>
+              <input type="number" class="form-control mt-2" placeholder="2" id="angka-2" name="angka_2">
+            </label>
+          </div>
+          <div class="mb-4">
+            <small style="color: red;" id="error-message"></small>
+          </div>
+          <button class="btn btn-card" type="submit" style="width: 100%">
+            Cek Angka
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-  {{templates['footer']|safe}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-    crossorigin="anonymous"></script>
+<script>
 
-  <script>
+  const angka_1 = document.getElementById('angka-1');
+  const angka_2 = document.getElementById('angka-2');
 
-    const angka_1 = document.getElementById('angka-1');
-    const angka_2 = document.getElementById('angka-2');
+  const small = document.getElementById("error-message");
 
-    const small = document.getElementById("error-message");
-
-    function validasiForm() {
-      if (angka_1.value === "" || angka_2.value === "" || isNaN(angka_1.value) || isNaN(angka_2.value)) {
-        small.innerHTML = "Input harus diisi dan berupa angka";
-        return false;
-      }
-      return true;
+  function validasiForm() {
+    if (angka_1.value === "" || angka_2.value === "" || isNaN(angka_1.value) || isNaN(angka_2.value)) {
+      small.innerHTML = "Input harus diisi dan berupa angka";
+      return false;
     }
-  </script>
+    return true;
+  }
+</script>
 
-</body>
-
-</html>
+{% endblock %}

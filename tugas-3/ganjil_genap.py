@@ -24,7 +24,7 @@ class GanjilGenap(object):
     def is_odd(self, angka):
         number_result = ""
 
-        if(int(angka) % 2 == 1):
+        if int(angka) % 2 == 1:
             number_result = f"{angka} adalah bilangan ganjil"
         else:
             number_result = f"{angka} adalah bilangan genap"

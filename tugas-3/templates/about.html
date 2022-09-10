@@ -1,54 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <title>Flask Python</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block content %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}" />
-</head>
-
-<body>
-
-    <section class="abovefold overflow-hidden">
-        {{templates['header']|safe}}
-        <div class="container header">
-            <div class="row">
-                <div class="col-lg-8 px-md-0 my-auto position-relative">
-                    <div class="headline">
-                        About
-                    </div>
-                    <div class="sub-headline mb-4">
-                        Berikut adalah panduan menu yang tersedia
-                    </div>
-                    <div class="card mt-4" style="background-color: #313e60 !important; color: white; padding: 1rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">Beranda</h5>
-                            <p class="card-text">Halaman utama yang menyediakan akses form untuk melakukan cek bilangan
-                                ganjil dan genap dengan menggunakan dua masukkan berupa angka.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="card mt-4" style="background-color: #313e60 !important; color: white; padding: 1rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">Menu 1</h5>
-                            <p class="card-text">Halaman untuk melakukan cek bilangan
-                                ganjil dan genap dengan menggunakan dua angka yang telah di <i>hardcoded</i>.
-                            </p>
-                        </div>
-                    </div>
+<div class="container header">
+    <div class="row">
+        <div class="col-lg-8 px-md-0 my-auto position-relative">
+            <div class="headline">
+                About
+            </div>
+            <div class="sub-headline mb-4">
+                Berikut adalah panduan menu yang tersedia
+            </div>
+            <div class="card mt-4" style="background-color: #313e60 !important; color: white; padding: 1rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Beranda</h5>
+                    <p class="card-text">Halaman utama yang menyediakan akses form untuk melakukan cek bilangan
+                        ganjil dan genap dengan menggunakan dua masukkan berupa angka.
+                    </p>
+                </div>
+            </div>
+            <div class="card mt-4" style="background-color: #313e60 !important; color: white; padding: 1rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Menu 1</h5>
+                    <p class="card-text">Halaman untuk melakukan cek bilangan
+                        ganjil dan genap dengan menggunakan dua angka yang telah di <i>hardcoded</i>.
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</div>
 
-    {{templates['footer']|safe}}
-
-</body>
-
-</html>
+{% endblock %}

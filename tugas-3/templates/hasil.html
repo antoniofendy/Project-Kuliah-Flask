@@ -1,60 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <title>Flask Python</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block content %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}" />
-</head>
-
-<body>
-
-    <section class="abovefold overflow-hidden">
-        {{templates['header']|safe}}
-        <div class="container header">
-            <div class="row">
-                <div class="col-lg-6 px-md-0 my-auto position-relative">
-                    <div class="headline">
-                        Latihan Flask <span class="cl-light-blue">Tugas 3</span>
-                    </div>
-                    <div class="sub-headline">
-                        Program sederhana penentuan angka ganjil dan genap
-                    </div>
-                </div>
-                <div class="col-lg-6 mt-5 mt-md-0">
-                    <div class="card">
-                        <h4>Hasil Cek</h4>
-                        <p>
-                            Dari angka {{ganjil_genap.get_angka_1()}} dan {{ganjil_genap.get_angka_2()}}
-                        </p>
-                        <div class="input-group mb-4">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">{{ganjil_genap.compare_angka()}}</li>
-                                <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_1())}}</li>
-                                <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_2())}}</li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-card" href="{{url_for('index')}}">
-                            Cek angka lain
-                        </a>
-                    </div>
-                </div>
+<div class="container header">
+    <div class="row">
+        <div class="col-lg-6 px-md-0 my-auto position-relative">
+            <div class="headline">
+                Latihan Flask <span class="cl-light-blue">Tugas 3</span>
+            </div>
+            <div class="sub-headline">
+                Program sederhana penentuan angka ganjil dan genap
             </div>
         </div>
-    </section>
+        <div class="col-lg-6 mt-5 mt-md-0">
+            <div class="card">
+                <h4>Hasil Cek</h4>
+                <p>
+                    Dari angka {{ganjil_genap.get_angka_1()}} dan {{ganjil_genap.get_angka_2()}}
+                </p>
+                <div class="input-group mb-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">{{ganjil_genap.compare_angka()}}</li>
+                        <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_1())}}</li>
+                        <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_2())}}</li>
+                    </ul>
+                </div>
+                <a class="btn btn-card" href="{{url_for('index')}}">
+                    Cek angka lain
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-    {{templates['footer']|safe}}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+{% endblock %}
