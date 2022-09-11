@@ -13,16 +13,16 @@
             </div>
         </div>
         <div class="col-lg-6 mt-5 mt-md-0">
-            <div class="card">
+            <div class="card" id="cardCol">
                 <h4>Hasil Cek</h4>
                 <p>
                     Dari angka {{ganjil_genap.get_angka_1()}} dan {{ganjil_genap.get_angka_2()}}
                 </p>
                 <div class="input-group mb-4">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">{{ganjil_genap.compare_angka()}}</li>
-                        <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_1())}}</li>
-                        <li class="list-group-item">{{ganjil_genap.is_odd(ganjil_genap.get_angka_2())}}</li>
+                    <ul class="list-group list-group-flush" >
+                        <li class="list-group-item" id="cardCol">{{ganjil_genap.compare_angka()}}</li>
+                        <li class="list-group-item" id="cardCol">{{ganjil_genap.is_odd(ganjil_genap.get_angka_1())}}</li>
+                        <li class="list-group-item" id="cardCol">{{ganjil_genap.is_odd(ganjil_genap.get_angka_2())}}</li>
                     </ul>
                 </div>
                 <a class="btn btn-card" href="{{url_for('index')}}">
