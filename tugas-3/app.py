@@ -19,7 +19,7 @@ def about():
 # Jo Shane
 @application.route('/members')
 def members():
-    return render_template('index.html')
+    return render_template('member.html')
 
 
 # Kosasi
