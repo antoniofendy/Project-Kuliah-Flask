@@ -4,10 +4,16 @@
   font-family: 'Inter', sans-serif !important;
 }
 
+.page-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
 body footer {
   background-color: #101419;
   text-align: center;
-}
+  width: 100%;
 
 body footer p {
   font-size: 20px;
