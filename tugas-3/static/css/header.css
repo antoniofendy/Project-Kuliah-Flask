@@ -201,3 +201,7 @@ body .abovefold .card .award {
     line-height: 18px;
     color: #8D8F98;
 }
+
+#cardCol{
+    background-color: rgb(231, 231, 231);;
+}
