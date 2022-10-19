@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if new %}
+Staf Baru
+{% else %}
+
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if new %}
+        Staf Baru
+        {% else %}
+
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{{url_for('main.new_staff')}}" method="post">
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.name.label() }}
+                {{ form.name(class_="form-control") }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.email.label }}
+                {{ form.email(class_="form-control") }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.phone.label }}
+                {{ form.phone(class_="form-control") }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.address.label }}
+                {{ form.address(class_="form-control") }}
+            </div>
+        </div>
+        <div class="form-row my-3">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.picture.label }}
+                {{ form.picture(class_="form-control-file") }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.password.label }}
+                {{ form.password(class_="form-control") }}
+            </div>
+        </div>
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}

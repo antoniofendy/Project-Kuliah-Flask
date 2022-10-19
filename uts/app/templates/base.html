@@ -46,7 +46,7 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    {% include "navbar/search.html" %}
+                    {# include "navbar/search.html" #}
 
                     <!-- Topbar Navbar -->
                     {% include "navbar/navbar.html" %}
@@ -56,13 +56,11 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <div class="card card-body">
 
-                        {% block content %}
-                        <!-- Content -->
-                        {% endblock %}
+                    {% block content %}
+                    <!-- Content -->
+                    {% endblock %}
 
-                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
