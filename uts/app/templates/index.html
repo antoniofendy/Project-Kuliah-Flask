@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Halaman Utama{% endblock %}
 
 {% block content %}
 
@@ -8,5 +9,20 @@
   <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
       class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 </div>
+
+{% if form %}
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+
+  <p>
+    {{ form.title.label }}
+    {{ form.title() }}
+  </p>
+
+  <p>{{ form.submit() }}</p>
+</form>
+{% endif %}
+
+
 
 {% endblock %}

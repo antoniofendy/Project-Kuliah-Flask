@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block title %} Rental DVD {% endblock %}</title>
+    <title>{% block title %}{% endblock %} | Rental DVD </title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
@@ -56,11 +56,13 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class="card card-body">
 
-                    {% block content %}
-                    <!-- Content -->
-                    {% endblock %}
+                        {% block content %}
+                        <!-- Content -->
+                        {% endblock %}
 
+                    </div>
                 </div>
                 <!-- /.container-fluid -->
 
@@ -83,7 +85,7 @@
     </a>
 
     <!-- Logout Modal-->
-    {% include "auth/logout.html" %}
+    {# include "logout_modal.html" #}
 
     <!-- Bootstrap core JavaScript-->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
