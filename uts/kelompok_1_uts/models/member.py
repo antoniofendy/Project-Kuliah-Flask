@@ -1,4 +1,4 @@
-from app import db
+from kelompok_1_uts import db
 
 
 class Member(db.Model):

@@ -1,6 +1,5 @@
-from flask import render_template
-from app import db
-from app.models.staff import Staff
+from kelompok_1_uts import db
+from kelompok_1_uts.models.staff import Staff
 
 
 def create(staff):

@@ -1,4 +1,3 @@
-from ast import Sub
 from flask_wtf import FlaskForm
 
 from wtforms import StringField, SubmitField

@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request
 
-from app.forms import staff
-from app.models.staff import Staff
-from app.controllers import staff as staff_controller
+from kelompok_1_uts.forms.staff import StaffForm
+from kelompok_1_uts.models.staff import Staff
+from kelompok_1_uts.controllers import staff as staff_controller
 
 bp = Blueprint("main", __name__)
 
@@ -32,7 +32,7 @@ def staffs_list():
 
 @bp.route("/staffs/new", methods=["GET", "POST"])
 def new_staff():
-    form = staff.StaffForm()
+    form = StaffForm()
 
     if request.method == "POST":
         staff_controller.create(

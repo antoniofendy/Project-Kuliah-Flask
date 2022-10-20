@@ -1,4 +1,3 @@
-from msilib import PID_CHARCOUNT
 from flask_wtf import FlaskForm
 
 from wtforms import (
