@@ -19,7 +19,7 @@ docs/_build/
 .vscode
 __pycache__/
 *.db
-uts/migrations/versions/
+uts/migrations/
 
 # Coverage reports
 htmlcov/
