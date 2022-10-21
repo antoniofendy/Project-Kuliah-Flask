@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<div class="card card-body">
+
+    {% block list %}{% endblock %}
+
+</div>
+{% endblock %}
