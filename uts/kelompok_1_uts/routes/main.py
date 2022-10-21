@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from kelompok_1_uts.forms.staff import StaffForm
 from kelompok_1_uts.models.staff import Staff
@@ -45,6 +45,8 @@ def new_staff():
                 picture=request.form.get("picture"),
             )
         )
-        return render_template("staff/form.html")
+
+        flash("Data staf berhasil ditambahkan.", category="success")
+        return redirect(url_for("main.staffs_list"))
 
     return render_template("staff/form.html", form=form, new=True)

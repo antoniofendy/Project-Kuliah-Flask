@@ -7,6 +7,18 @@ def create(staff):
     db.session.commit()
 
 
+def update(staff):
+    pass
+
+
+def delete(staff):
+    pass
+
+
+def get(staff):
+    pass
+
+
 def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
     response = Staff.query.order_by(Staff.id.asc()).all()
