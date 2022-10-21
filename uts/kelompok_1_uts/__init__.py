@@ -1,10 +1,8 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
-from os import urandom
-
-DB_NAME = "database.db"
+from config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -13,10 +11,7 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_pyfile("config.cfg")
-    app.config["SECRET_KEY"] = urandom(32)
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
-    app.config["SQLALCHEMY_TRACK_MODIFIFACTIONS"] = False
+    app.config.from_object(Config)
 
     db.init_app(app)
     migrate.init_app(app, db)
