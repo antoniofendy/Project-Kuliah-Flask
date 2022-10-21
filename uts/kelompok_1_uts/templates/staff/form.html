@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{% if new %}
-Staf Baru
+{% if data %}
+{{data.name}}
 {% else %}
-
+Staf Baru
 {% endif %}
 {% endblock %}
 
@@ -12,51 +12,68 @@ Staf Baru
 <div class="card card-body">
 
     <div class="h3 mb-2 text-gray-800">
-        {% if new %}
-        Staf Baru
+        {% if data %}
+        {{data.name}}
         {% else %}
-
+        Staf Baru
         {% endif %}
     </div>
 
     {% if form %}
-    <form action="{{url_for('main.new_staff')}}" method="post">
+    <form action="{% if data%}
+                    {{url_for('main.update_staff', id_=data.id)}}
+                    {% else %}
+                    {{url_for('main.new_staff')}}
+                    {% endif %}
+    " method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.name.label() }}
-                {{ form.name(class_="form-control") }}
+                {{ form.name(class_="form-control", value=data.name) }}
             </div>
         </div>
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.email.label }}
-                {{ form.email(class_="form-control") }}
+                {{ form.email(class_="form-control", value=data.email, readonly=true if data else false) }}
             </div>
         </div>
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.phone.label }}
-                {{ form.phone(class_="form-control") }}
+                {{ form.phone(class_="form-control", value=data.phone) }}
             </div>
         </div>
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.address.label }}
-                {{ form.address(class_="form-control") }}
+                {{ form.address(class_="form-control", value=data.address) }}
             </div>
         </div>
         <div class="form-row my-3">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.picture.label }}
-                {{ form.picture(class_="form-control-file") }}
+                {{ form.picture(class_="form-control-file", value=data.picture) }}
             </div>
         </div>
+        {% if not data %}
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.password.label }}
                 {{ form.password(class_="form-control") }}
             </div>
         </div>
+        {% endif %}
+
 
         {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
     </form>

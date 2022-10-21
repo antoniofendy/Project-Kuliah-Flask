@@ -43,7 +43,14 @@
             <th scope="row">{{ d.id }}</th>
             <td>{{ d.name }}</td>
             <td>{{ d.email }}</td>
-            <td></td>
+            <td>
+                <form action="{{url_for('main.delete_staff', id_=d.id)}}" method="post">
+                    <a href="{{url_for('main.show_staff', id=d.id)}}" type="button"
+                        class="btn text-primary bg-transparent"><i class="fas fa-fw fa-pen"></i></a>
+                    <button href="" type="submit" class="btn text-danger bg-transparent"><i
+                            class="fas fa-fw fa-trash"></i></button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

@@ -8,15 +8,24 @@ def create(staff):
 
 
 def update(staff):
-    pass
+    cur_staff = db.get_or_404(Staff, staff["id"])
+    cur_staff.name = staff["name"]
+    cur_staff.phone = staff["phone"]
+    cur_staff.address = staff["address"]
+    cur_staff.picture = staff["picture"]
+
+    db.session.commit()
 
 
 def delete(staff):
-    pass
+    print(staff)
+    cur_staff = db.get_or_404(Staff, staff["id"])
+    db.session.delete(cur_staff)
+    db.session.commit()
 
 
-def get(staff):
-    pass
+def get(id):
+    return db.get_or_404(Staff, id)
 
 
 def get_all():

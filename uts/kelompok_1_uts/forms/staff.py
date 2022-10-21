@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Email, Length
 
 
 class StaffForm(FlaskForm):
-    id = IntegerField("ID Staf")
+    id = IntegerField("ID Staf", render_kw={"readonly": True})
     name = StringField("Nama", validators=[DataRequired(), Length(3, 64)])
     email = EmailField("Email", validators=[DataRequired(), Email(), Length(1, 64)])
     password = PasswordField("Password", validators=[DataRequired(), Length(8, 32)])
