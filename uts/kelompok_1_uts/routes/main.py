@@ -19,11 +19,6 @@ def settings_list():
     return "<h1>Pengaturan</h1>"
 
 
-@bp.route("/customers")
-def customers_list():
-    return "<h1>Daftar Pelanggan</h1>"
-
-
 @bp.route("/staff", defaults={"id": None})
 @bp.route("/staff/<int:id>")
 def show_staff(id):
