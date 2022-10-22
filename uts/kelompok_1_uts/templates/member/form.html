@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if data %}
+{{data.name}}
+{% else %}
+Member Baru
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        {{data.name}}
+        {% else %}
+        Member Baru
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('member.update', id_=data.id)}}
+                    {% else %}
+                    {{url_for('member.create')}}
+                    {% endif %}
+    " method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.name.label() }}
+                {{ form.name(class_="form-control", value=data.name) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.gender.label() }}
+                {{ form.gender(class_="form-control", value=data.gender) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.birth.label }}
+                {{ form.birth(class_="form-control", value=data.birth) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.address.label }}
+                {{ form.address(class_="form-control", value=data.address) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.phone.label }}
+                {{ form.phone(class_="form-control", value=data.phone) }}
+            </div>
+        </div>
+        <div class="form-row my-3">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.email.label }}
+                {{ form.email(class_="form-control", value=data.email) }}
+            </div>
+        </div>
+
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    $('select option[value=placeholder]').attr({
+        'disabled': true,
+        'selected': true
+    })
+</script>
+
+{% endblock %}

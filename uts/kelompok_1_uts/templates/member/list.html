@@ -1,0 +1,58 @@
+{% extends 'list.html' %}
+
+{% block title %}Daftar Member{% endblock %}
+
+{% block list %}
+<div class="h3 mb-2 text-gray-800">
+    Daftar Member
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{category}} mb-2">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endwith %}
+
+
+
+
+<div class="mb-2 ml-auto">
+    <a href="{{url_for('member.create')}}" class="btn btn-primary">
+        <i class="fas fa-plus mr-1"></i>
+        Member Baru
+    </a>
+</div>
+
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Email</th>
+            <th scope="col">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in data %}
+        <tr>
+            <th scope="row">{{ d.id }}</th>
+            <td>{{ d.name }}</td>
+            <td>{{ d.email }}</td>
+            <td>
+                <form action="{{url_for('member.delete', id_=d.id)}}" method="post">
+                    <a href="{{url_for('member.show', id=d.id)}}" type="button"
+                        class="btn text-primary bg-transparent"><i class="fas fa-fw fa-pen"></i></a>
+                    <button href="" type="submit" class="btn text-danger bg-transparent"><i
+                            class="fas fa-fw fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
