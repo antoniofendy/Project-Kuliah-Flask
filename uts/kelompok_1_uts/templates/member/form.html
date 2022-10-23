@@ -21,7 +21,7 @@ Member Baru
 
     {% if form %}
     <form action="{% if data%}
-                    {{url_for('member.update', id_=data.id)}}
+                    {{url_for('member.update', id=data.id)}}
                     {% else %}
                     {{url_for('member.create')}}
                     {% endif %}
@@ -56,7 +56,8 @@ Member Baru
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.address.label }}
-                {{ form.address(class_="form-control", value=data.address) }}
+                <textarea required min="10" max="data.address" class="form-control" id="body" name="address"
+                    style="min-height: 80px">{{data.address}}</textarea>
             </div>
         </div>
         <div class="form-row my-2">
@@ -82,11 +83,13 @@ Member Baru
 
 {% block script %}
 
+{% if data == null %}
 <script>
+
     $('select option[value=placeholder]').attr({
         'disabled': true,
-        'selected': true
     })
 </script>
+{% endif %}
 
 {% endblock %}

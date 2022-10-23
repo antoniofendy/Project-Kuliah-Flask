@@ -34,9 +34,34 @@ def create():
     return render_template("member/form.html", form=form, data=None)
 
 
-@bp.route("/show")
-def show():
-    return "<h1>Detail</h1>"
+@bp.route("/show/<int:id>")
+def show(id):
+    form = MemberForm()
+    data = member_controller.get(id)
+
+    form.gender.choices = [('laki-laki', 'Laki-laki'), ('perempuan', 'Perempuan')]
+    form.gender.default = data.gender
+
+    form.process()
+
+    return render_template("member/form.html", form=form, data=data)
+
+@bp.route("/update/<int:id>", methods=["POST"])
+def update(id):
+    member_controller.update(
+        {
+            "id": int(id),
+            "name": request.form.get("name"),
+            "gender": request.form.get("gender"),
+            "birth": request.form.get("birth"),
+            "address": request.form.get("address"),
+            "phone": request.form.get("phone"),
+            "email": request.form.get("email"),
+        }
+    )
+
+    flash("Data member berhasil diubah.", category="primary")
+    return redirect(url_for("member.index"))
 
 
 @bp.route("/delete",  methods=["POST"])
