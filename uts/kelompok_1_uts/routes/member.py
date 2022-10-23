@@ -39,7 +39,10 @@ def show():
     return "<h1>Detail</h1>"
 
 
-@bp.route("/delete")
+@bp.route("/delete",  methods=["POST"])
 def delete():
-    return "<h1>Hapus</h1>"
+    member_controller.delete(request.form.get("id"))
+
+    flash("Data member berhasil dihapus.", category="danger")
+    return redirect(url_for("member.index"))
 

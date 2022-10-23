@@ -9,3 +9,8 @@ def get_all():
 def create(Member):
     db.session.add(Member)
     db.session.commit()
+
+def delete(id):
+    cur_member = db.get_or_404(Member, id)
+    db.session.delete(cur_member)
+    db.session.commit()
