@@ -41,7 +41,7 @@ def create():
         )
 
         flash("Data staf berhasil ditambahkan.", category="success")
-        return redirect(url_for("member.index"))
+        return redirect(url_for("member.show"))
 
     return render_template("member/form.html", form=form, data=None)
 
@@ -60,7 +60,7 @@ def update(id):
     )
 
     flash("Data member berhasil diubah.", category="primary")
-    return redirect(url_for("member.index"))
+    return redirect(url_for("member.show"))
 
 
 @bp.route("/delete",  methods=["POST"])
@@ -68,5 +68,5 @@ def delete():
     member_controller.delete(request.form.get("id"))
 
     flash("Data member berhasil dihapus.", category="danger")
-    return redirect(url_for("member.index"))
+    return redirect(url_for("member.show"))
 
