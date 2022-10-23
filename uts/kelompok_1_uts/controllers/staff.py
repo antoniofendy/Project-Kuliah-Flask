@@ -17,9 +17,8 @@ def update(staff):
     db.session.commit()
 
 
-def delete(staff):
-    print(staff)
-    cur_staff = db.get_or_404(Staff, staff["id"])
+def delete(id):
+    cur_staff = db.get_or_404(Staff, id)
     db.session.delete(cur_staff)
     db.session.commit()
 

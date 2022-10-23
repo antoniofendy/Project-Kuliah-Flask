@@ -63,7 +63,7 @@ def update(id):
     return redirect(url_for("member.show"))
 
 
-@bp.route("/delete",  methods=["POST"])
+@bp.route("/delete", methods=["POST"])
 def delete():
     member_controller.delete(request.form.get("id"))
 

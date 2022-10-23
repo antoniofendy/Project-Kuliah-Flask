@@ -6,12 +6,15 @@ def get_all():
     response = Member.query.order_by(Member.id.asc()).all()
     return response
 
+
 def get(id):
     return db.get_or_404(Member, id)
+
 
 def create(Member):
     db.session.add(Member)
     db.session.commit()
+
 
 def update(member):
     cur_member = db.get_or_404(Member, member["id"])
@@ -23,6 +26,7 @@ def update(member):
     cur_member.email = member["email"]
 
     db.session.commit()
+
 
 def delete(id):
     cur_member = db.get_or_404(Member, id)

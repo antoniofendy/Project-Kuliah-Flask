@@ -71,9 +71,9 @@ def update_staff(id_):
     return redirect(url_for("main.show_staff", id=None))
 
 
-@bp.route("/staff/delete/<int:id_>", methods=["POST"])
-def delete_staff(id_):
-    staff_controller.delete({"id": int(id_)})
+@bp.route("/staff/delete/", methods=["POST"])
+def delete_staff():
+    staff_controller.delete(request.form.get("id"))
 
     flash("Data staf berhasil dihapus.", category="danger")
     return redirect(url_for("main.show_staff", id=None))
