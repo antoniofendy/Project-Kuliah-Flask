@@ -5,10 +5,22 @@ from kelompok_1_uts.forms.member import MemberForm
 from kelompok_1_uts.models.member import Member
 from kelompok_1_uts.controllers import member as member_controller
 
-bp = Blueprint("member", __name__)
+bp = Blueprint("member", __name__, template_folder="templates", static_folder="static")
 
-@bp.route("/index")
-def index():
+@bp.route("/", defaults={"id": None})
+@bp.route("/<int:id>")
+def show(id):
+    if id:
+        form = MemberForm()
+        data = member_controller.get(id)
+
+        form.gender.choices = [('laki-laki', 'Laki-laki'), ('perempuan', 'Perempuan')]
+        form.gender.default = data.gender
+
+        form.process()
+
+        return render_template("member/form.html", form=form, data=data)
+    
     data = member_controller.get_all()
     return render_template("member/list.html", data=data)
     
@@ -32,19 +44,6 @@ def create():
         return redirect(url_for("member.index"))
 
     return render_template("member/form.html", form=form, data=None)
-
-
-@bp.route("/show/<int:id>")
-def show(id):
-    form = MemberForm()
-    data = member_controller.get(id)
-
-    form.gender.choices = [('laki-laki', 'Laki-laki'), ('perempuan', 'Perempuan')]
-    form.gender.default = data.gender
-
-    form.process()
-
-    return render_template("member/form.html", form=form, data=data)
 
 @bp.route("/update/<int:id>", methods=["POST"])
 def update(id):

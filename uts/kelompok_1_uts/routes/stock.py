@@ -8,7 +8,8 @@ bp = Blueprint("stock", __name__, template_folder="templates", static_folder="st
 
 
 @bp.route("/")
-def index():
+# rename index to index_stock because of index func already used for movie in this case
+def index_stock():
     return "<h1>Stok</h1>"
 
 
