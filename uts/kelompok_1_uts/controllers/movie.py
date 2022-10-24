@@ -8,7 +8,7 @@ def create(movie):
 
 def update(movie):
     cur_movie = db.get_or_404(Movie, movie["id"])
-    cur_movie.title = movie["name"]
+    cur_movie.title = movie["title"]
     cur_movie.synopsis = movie["synopsis"]
     cur_movie.duration = movie["duration"]
     cur_movie.actor = movie["actor"]

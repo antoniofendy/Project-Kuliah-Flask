@@ -33,6 +33,22 @@ def create():
     return render_template("movie/form.html", form=form, data=None)
 
 
+@bp.route("/update/<int:id>", methods=["POST"])
+def update(id):
+    movie_controller.update(
+        {
+            "id": int(id),
+            "title": request.form.get("title"),
+            "synopsis": request.form.get("synopsis"),
+            "duration": request.form.get("duration"),
+            "actor": request.form.get("actor"),
+            "picture": request.form.get("picture"),
+        }
+    )
+
+    flash("Data member berhasil diubah.", category="primary")
+    return redirect(url_for("movie.index"))
+
 @bp.route("/show")
 def show():
     return "<h1>Detail</h1>"
