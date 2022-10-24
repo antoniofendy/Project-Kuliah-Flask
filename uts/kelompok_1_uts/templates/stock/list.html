@@ -42,7 +42,7 @@
         {% for d in data %}
         <tr>
             <th scope="row" class="col-md-1">{{ d.id }}</th>
-            <td>{{ d.title }}</td>
+            <td>{{ d.movie.title }}</td>
             <td class="text-right col-md-2">Rp {{ d.price }}</td>
             <td class="text-right col-md-2">{{ d.qty }}</td>
             <td class="col-md-2">

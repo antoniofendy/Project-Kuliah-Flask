@@ -2,7 +2,7 @@
 
 {% block title %}
 {% if data %}
-{{title}}
+{{data.movie.title}}
 {% else %}
 Stok Baru
 {% endif %}
@@ -13,7 +13,7 @@ Stok Baru
 
     <div class="h3 mb-2 text-gray-800">
         {% if data %}
-        {{title}}
+        {{data.movie.title}}
         {% else %}
         Stok Baru
         {% endif %}

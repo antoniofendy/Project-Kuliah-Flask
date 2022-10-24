@@ -28,9 +28,5 @@ def get(id):
 
 def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
-    response = (
-        Stock.query.order_by(Stock.id.asc())
-        .join(Movie, Stock.movie_id == Movie.id)
-        .add_columns(Stock.id, Stock.qty, Stock.price, Movie.title)
-    )
+    response = Stock.query.order_by(Stock.id.asc()).all()
     return response

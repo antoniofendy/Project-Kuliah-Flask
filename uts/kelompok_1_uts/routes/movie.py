@@ -19,7 +19,7 @@ def index(id):
     data = movie_controller.get_all()
 
     return render_template("movie/list.html", data=data)
-    
+
 
 @bp.route("/create", methods=["GET", "POST"])
 def create():
@@ -57,14 +57,15 @@ def update(id):
     flash("Data member berhasil diubah.", category="primary")
     return redirect(url_for("movie.index"))
 
+
 @bp.route("/show")
 def show():
     return "<h1>Detail</h1>"
 
 
-@bp.route("/delete",  methods=["POST"])
+@bp.route("/delete", methods=["POST"])
 def delete():
-    movie_controller.delete(request.form.get("id"))
+    if movie_controller.delete(request.form.get("id")):
+        flash("Data Film berhasil dihapus.", category="danger")
 
-    flash("Data Film berhasil dihapus.", category="danger")
     return redirect(url_for("movie.index", id=None))

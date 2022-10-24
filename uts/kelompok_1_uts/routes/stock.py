@@ -24,13 +24,9 @@ def show(id):
         form.movie.choices = movies_list
         form.movie.default = data.movie_id
 
-        title = [title for title in movies_list if title[0] == data.movie_id][0][1]
-
         form.process()
 
-        # form.gender.choices = [("laki-laki", "Laki-laki"), ("perempuan", "Perempuan")]
-
-        return render_template("stock/form.html", form=form, data=data, title=title)
+        return render_template("stock/form.html", form=form, data=data)
 
     data = stock_controller.get_all()
     return render_template("stock/list.html", data=data)
