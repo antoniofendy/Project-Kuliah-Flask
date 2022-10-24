@@ -1,53 +1,45 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from kelompok_1_uts.forms.movie import MovieForm
-from kelompok_1_uts.models.movie import Movie
-from kelompok_1_uts.controllers import movie as movie_controller
+from kelompok_1_uts.forms.movie_category import CategoryForm
+from kelompok_1_uts.models.movie_category import MovieCategory
+from kelompok_1_uts.controllers import movie as category_controller
 
-bp = Blueprint("movie", __name__, template_folder="templates", static_folder="static")
+bp = Blueprint("category", __name__, template_folder="templates", static_folder="static")
 
 @bp.route("/")
 def index():
     
     ##data = movie_controller.get_all()
-    return "<h2>Movie List</h2>" ##render_template("movie/list.html", data=data)
+    return "<h2>category List</h2>" ##render_template("movie/list.html", data=data)
     
 
 @bp.route("/create", methods=["GET", "POST"])
 def create():
-    form = MovieForm()
+    form = CategoryForm()
     if request.method == "POST":
-        movie_controller.create(
-            Movie(
-                title=request.form.get("title"),
-                synopsis=request.form.get("synopsis"),
-                picture=request.form.get("picture"),
-                duration=request.form.get("duration"),
-                actor=request.form.get("actor"),
+        category_controller.create(
+            MovieCategory(
+                name=request.form.get(""),
             )
         )
 
         flash("Data staf berhasil ditambahkan.", category="success")
-        return redirect(url_for("movie.index"))
+        return redirect(url_for("category.index"))
 
-    return render_template("movie/form.html", form=form, data=None)
+    return render_template("category/form.html", form=form, data=None)
 
 
 @bp.route("/update/<int:id>", methods=["POST"])
 def update(id):
-    movie_controller.update(
+    category_controller.update(
         {
             "id": int(id),
-            "title": request.form.get("title"),
-            "synopsis": request.form.get("synopsis"),
-            "duration": request.form.get("duration"),
-            "actor": request.form.get("actor"),
-            "picture": request.form.get("picture"),
+            "name": request.form.get("name"),
         }
     )
 
-    flash("Data member berhasil diubah.", category="primary")
-    return redirect(url_for("movie.index"))
+    flash("Data kategori berhasil diubah.", category="primary")
+    return redirect(url_for("category.index"))
 
 @bp.route("/show")
 def show():
@@ -56,7 +48,7 @@ def show():
 
 @bp.route("/delete",  methods=["POST"])
 def delete():
-    movie_controller.delete(request.form.get("id"))
+    category_controller.delete(request.form.get("id"))
 
-    flash("Data Film berhasil dihapus.", category="danger")
-    return redirect(url_for("movie.index"))
+    flash("Data kategori berhasil dihapus.", category="danger")
+    return redirect(url_for("category.index"))
