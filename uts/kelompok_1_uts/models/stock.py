@@ -7,5 +7,7 @@ class Stock(db.Model):
     price = db.Column(db.Integer)
     movie_id = db.Column(db.Integer, db.ForeignKey("movie.id"), nullable=False)
 
+    transaction = db.relationship("Transaction", backref="stock", lazy=True)
+
     def __repr__(self) -> str:
         return f"<Stock {self.id}:Movie {self.movie_id}>"

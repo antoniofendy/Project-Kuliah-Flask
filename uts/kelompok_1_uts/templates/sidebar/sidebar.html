@@ -28,9 +28,9 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="{{url_for('rental.new_rent')}}" aria-expanded="true">
+        <a class="nav-link" href="{{url_for('rental.new_transaction')}}" aria-expanded="true">
             <i class="fas fa-fw fa-compact-disc"></i>
-            <span>Sewa</span>
+            <span>Transaksi Baru</span>
         </a>
         <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -42,7 +42,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="{{url_for('rental.rent_return')}}" aria-expanded="true">
+        <a class="nav-link" href="{{url_for('rental.return_transaction')}}" aria-expanded="true">
             <i class="fas fa-solid fa-arrow-left"></i>
             <span>Pengembalian</span>
         </a>
@@ -58,8 +58,8 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- <h6 class="collapse-header">Transaksi:</h6> -->
-                <a class="collapse-item" href="{{url_for('rental.index')}}">Penyewaan</a>
-                <a class="collapse-item" href="{{url_for('rental.payment_list')}}">Pembayaran</a>
+                <a class="collapse-item" href="{{url_for('rental.show_transaction')}}">Penyewaan</a>
+                <a class="collapse-item" href="{{url_for('rental.show_payment', id=None)}}">Pembayaran</a>
             </div>
         </div>
     </li>
@@ -90,7 +90,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- <h6 class="collapse-header">Login Screens:</h6> -->
                 <a class="collapse-item" href="{{url_for('movie.index')}}">Daftar Film</a>
-                <a class="collapse-item" href="">Daftar Kategori</a>
+                <a class="collapse-item" href="{{url_for('movieCategory.index')}}">Daftar Kategori</a>
             </div>
         </div>
     </li>

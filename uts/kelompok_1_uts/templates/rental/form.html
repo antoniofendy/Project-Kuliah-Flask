@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if data %}
+Transaksi {{data.id}}
+{% else %}
+Transaksi Baru
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        Transaksi {{data.id}}
+        {% else %}
+        Transaksi Baru
+        {% endif %}
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}} mb-2">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endwith %}
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('rental.update_transaction', id=data.id)}}
+                    {% else %}
+                    {{url_for('rental.new_transaction')}}
+                    {% endif %}" method="post" enctype="multipart/form-data">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.member.label() }}
+                {{ form.member(class_="form-control", value=data.member, disabled=true if data else false) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.movie.label }}
+                {{ form.movie(class_="form-control", value=data.movie, disabled=true if data else false) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.rental_start.label }}
+                {{ form.rental_start(class_="form-control", value=data.rental_start_date, disabled=true if data else
+                false)
+                }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.rental_end.label }}
+                {{ form.rental_end(class_="form-control", value=data.rental_end_date,
+                disabled=true if data else false)
+                }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.charge.label }}
+                {{ form.charge(class_="form-control", value=data.charge, disabled=true if data else false) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.staff.label }}
+                {{ form.staff(class_="form-control", value=data.staff, disabled=true if data else false) }}
+            </div>
+        </div>
+
+
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.status.label }}
+                {{ form.status(class_="form-control", value=data.status.value, disabled=true) }}
+            </div>
+        </div>
+
+        {% if data.status.name == "UNPAID" %}
+        <a href="{{url_for('rental.show_payment', id=data.id)}}"
+            class="btn btn-outline-primary shadow-sm mt-3">Bayar</a>
+        {% endif %}
+
+        {% else %}
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+        {% endif %}
+
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+{{ super() }}
+<script>
+    $('form').submit(function (e) {
+        $(':disabled').each(function (e) {
+            $(this).removeAttr('disabled');
+        })
+    });
+</script>
+{% endblock %}

@@ -10,5 +10,7 @@ class Staff(db.Model):
     address = db.Column(db.String(255))
     picture = db.Column(db.String(64))
 
+    transaction = db.relationship("Transaction", backref="staff", lazy=True)
+
     def __repr__(self) -> str:
         return f"<Staff {self.id}:{self.email}>"

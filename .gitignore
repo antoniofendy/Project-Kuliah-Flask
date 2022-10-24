@@ -20,6 +20,7 @@ docs/_build/
 __pycache__/
 *.db
 migrations/
+static/upload/
 
 # Coverage reports
 htmlcov/

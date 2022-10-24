@@ -9,3 +9,5 @@ class Member(db.Model):
     address = db.Column(db.Text, nullable=False)
     phone = db.Column(db.String(13), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
+
+    transaction = db.relationship("Transaction", backref="member", lazy=True)
