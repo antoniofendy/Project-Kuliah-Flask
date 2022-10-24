@@ -9,8 +9,8 @@ bp = Blueprint("category", __name__, template_folder="templates", static_folder=
 @bp.route("/")
 def index():
     
-    ##data = movie_controller.get_all()
-    return "<h2>category List</h2>" ##render_template("movie/list.html", data=data)
+    data = category_controller.get_all()
+    return render_template("category/list.html", data=data)
     
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -19,7 +19,7 @@ def create():
     if request.method == "POST":
         category_controller.create(
             MovieCategory(
-                name=request.form.get(""),
+                category_name=request.form.get("category"),
             )
         )
 

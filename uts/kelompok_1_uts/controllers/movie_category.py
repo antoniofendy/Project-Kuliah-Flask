@@ -15,7 +15,7 @@ def update(category):
 
 def delete(category):
     print(category)
-    cur_movie = db.get_or_404(Category, category["id"])
+    cur_category = db.get_or_404(Category, category["id"])
     db.session.delete(cur_category)
     db.session.commit()
 

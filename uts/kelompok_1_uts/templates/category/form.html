@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if data %}
+{{data.name}}
+{% else %}
+Tambah Kategori
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        {{data.name}}
+        {% else %}
+        Tambah Kategori 
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('movie_category.update', id=data.id)}}
+                    {% else %}
+                    {{url_for('movie_category.create')}}
+                    {% endif %}
+    " method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.category_name.label() }}
+                {{ form.category_name(class_="form-control", value=data.category }}
+            </div>
+        </div>
+
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}

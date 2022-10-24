@@ -4,7 +4,8 @@ from wtforms import (
     StringField, 
     SubmitField, 
     IntegerField, 
-    FileField)
+    FileField,
+    SelectField)
 from wtforms.validators import DataRequired
 
 
@@ -13,6 +14,7 @@ class MovieForm(FlaskForm):
     title = StringField("Judul", validators=[DataRequired()])
     synopsis = StringField("Sinopsis", validators=[DataRequired()])
     picture = FileField("Poster Film")
-    duration = IntegerField("Durasi", validators=[DataRequired()])
+    category = SelectField("Kategori")
+    duration = StringField("Durasi", validators=[DataRequired()])
     actor = StringField("Aktor/Aktris", validators=[DataRequired()])
     submit = SubmitField("Simpan")

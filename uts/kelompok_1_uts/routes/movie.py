@@ -9,8 +9,8 @@ bp = Blueprint("movie", __name__, template_folder="templates", static_folder="st
 @bp.route("/")
 def index():
     
-    ##data = movie_controller.get_all()
-    return "<h2>Movie List</h2>" ##render_template("movie/list.html", data=data)
+    data = movie_controller.get_all()
+    return render_template("movie/list.html", data=data)
     
 
 @bp.route("/create", methods=["GET", "POST"])
