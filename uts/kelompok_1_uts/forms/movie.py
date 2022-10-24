@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired
 
 
 class MovieForm(FlaskForm):
-    id_movies = IntegerField("ID Film", render_kw={"readonly": True})
+    id = IntegerField("ID Film", render_kw={"readonly": True})
     title = StringField("Judul", validators=[DataRequired()])
     synopsis = StringField("Sinopsis", validators=[DataRequired()])
     picture = FileField("Poster Film")
