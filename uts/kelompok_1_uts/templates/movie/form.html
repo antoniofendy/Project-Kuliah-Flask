@@ -66,8 +66,9 @@ Tambah Film
 
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.synopsis.label() }}
-                {{ form.synopsis(class_="form-control", value=data.synopsis) }}
+                {{ form.synopsis.label }}
+                <textarea required min="10" max="data.synopsis" class="form-control" id="body" name="synopsis"
+                    style="min-height: 80px">{{data.synopsis}}</textarea>
             </div>
         </div>
 
