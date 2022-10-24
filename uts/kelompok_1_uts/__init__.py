@@ -29,7 +29,7 @@ def create_app():
     app.register_blueprint(stock_bp, url_prefix="/stock")
     app.register_blueprint(member_bp, url_prefix="/member")
     app.register_blueprint(charge_rule_bp, url_prefix="/charge-rule")
-    app.register_blueprint(movie_bp)
+    app.register_blueprint(movie_bp, url_prefix="/movie")
     app.register_blueprint(errors_bp)
 
     return app
