@@ -24,8 +24,7 @@ Staf Baru
                     {{url_for('main.update_staff', id_=data.id)}}
                     {% else %}
                     {{url_for('main.new_staff')}}
-                    {% endif %}
-    " method="post">
+                    {% endif %}" method="post">
         {% if data %}
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">

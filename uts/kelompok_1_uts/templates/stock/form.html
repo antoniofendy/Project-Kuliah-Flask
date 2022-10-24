@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if data %}
+{{title}}
+{% else %}
+Stok Baru
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        {{title}}
+        {% else %}
+        Stok Baru
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('stock.update', id=data.id)}}
+                    {% else %}
+                    {{url_for('stock.create')}}
+                    {% endif %}" method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.movie.label() }}
+                {{ form.movie(class_="form-control", value=data.movie, disabled=true if data else false) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.qty.label }}
+                {{ form.qty(class_="form-control", value=data.qty) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.price.label }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                    </div>
+                    {{ form.price(class_="form-control", value=data.price) }}
+                </div>
+            </div>
+        </div>
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
