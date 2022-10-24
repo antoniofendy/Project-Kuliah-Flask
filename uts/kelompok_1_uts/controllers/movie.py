@@ -1,5 +1,8 @@
+from flask import flash, redirect, url_for
 from kelompok_1_uts import db
 from kelompok_1_uts.models.movie import Movie
+from kelompok_1_uts.models.stock import Stock
+
 
 def create(movie):
     db.session.add(movie)
@@ -19,8 +22,18 @@ def update(movie):
 
 def delete(id):
     cur_movie = db.get_or_404(Movie, id)
+
+    stock_of_movie = Stock.query.where(Stock.movie_id == id).all()
+    if stock_of_movie:
+        flash(
+            f"Film {cur_movie.title} tidak dapat dihapus karena terkait dengan Stok",
+            category="danger",
+        )
+        return redirect(url_for("movie.index")) and False
+
     db.session.delete(cur_movie)
     db.session.commit()
+    return True
 
 
 def get(id):

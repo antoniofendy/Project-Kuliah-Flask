@@ -18,7 +18,7 @@ def show(id):
         form = StockForm()
         data = stock_controller.get(id)
 
-        movies = db.session.query(Movie)
+        movies = db.session.query(Movie).all()
         movies_list = [(m.id, m.title) for m in movies]
 
         form.movie.choices = movies_list
@@ -36,7 +36,12 @@ def show(id):
 def create():
     form = StockForm()
 
-    movies = db.session.query(Movie)
+    movies = db.session.query(Movie).all()
+
+    if not movies:
+        flash("Tidak ada Film untuk dijadikan Stok.", category="info")
+        return redirect(url_for("movie.index"))
+
     movies_list = [(m.id, m.title) for m in movies]
 
     form.movie.choices = movies_list
