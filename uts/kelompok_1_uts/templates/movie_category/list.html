@@ -22,7 +22,7 @@
 
 
 <div class="mb-2 ml-auto">
-    <a href="{{url_for('movieCategory.create')}}" class="btn btn-primary">
+    <a href="{{url_for('movie_category.create')}}" class="btn btn-primary">
         <i class="fas fa-plus mr-1"></i>
         Kategori Baru
     </a>
@@ -39,10 +39,10 @@
     <tbody>
         {% for d in data %}
         <tr>
-            <th scope="row">{{ d.id }}</th>
+            <th scope="row" class="col-md-1">{{ d.id }}</th>
             <td>{{ d.category_name }}</td>
-            <td>
-                <a href="{{url_for('movieCategory.index', id=d.id)}}" type="button"
+            <td class="col-md-2">
+                <a href="{{url_for('movie_category.index', id=d.id)}}" type="button"
                     class="btn text-primary bg-transparent"><i class="fas fa-fw fa-pen"></i></a>
                 <button class="btn text-danger bg-transparent" data-toggle="modal" data-target="#deleteModal"
                     data-id="{{ d.id }}"><i class="fas fa-fw fa-trash"></i></button>
@@ -60,7 +60,7 @@
                 <h5>Anda yakin ingin menghapus kategori ini?</h5>
             </div>
             <div class="modal-footer">
-                <form action="{{url_for('movieCategory.delete')}}" method="post">
+                <form action="{{url_for('movie_category.delete')}}" method="post">
                     <input type="hidden" name="id" id="delete_id" value="">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
                     <button type="submit" class="btn btn-danger">Ya</button>
@@ -78,11 +78,11 @@
 <script>
     $('#deleteModal').on('show.bs.modal', function (e) {
         let button = $(e.relatedTarget)
-        let movieCategory_id = button.data('id')
+        let movie_category_id = button.data('id')
 
         let modal = $(this)
 
-        modal.find('.modal-footer #delete_id').val(movieCategory_id)
+        modal.find('.modal-footer #delete_id').val(movie_category_id)
     })
 </script>
 

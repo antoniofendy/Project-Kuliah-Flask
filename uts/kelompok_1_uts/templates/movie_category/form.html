@@ -15,15 +15,15 @@ Tambah Kategori
         {% if data %}
         {{data.name}}
         {% else %}
-        Tambah Kategori 
+        Tambah Kategori
         {% endif %}
     </div>
 
     {% if form %}
     <form action="{% if data%}
-                    {{url_for('movieCategory.update', id=data.id)}}
+                    {{url_for('movie_category.update', id=data.id)}}
                     {% else %}
-                    {{url_for('movieCategory.create')}}
+                    {{url_for('movie_category.create')}}
                     {% endif %}
     " method="post">
         {% if data %}

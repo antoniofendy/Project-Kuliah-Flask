@@ -1,5 +1,6 @@
 from kelompok_1_uts import db
-from kelompok_1_uts.models.movieCategory import MovieCategory
+from kelompok_1_uts.models.movie_category import MovieCategory
+
 
 def create(category):
     db.session.add(category)
