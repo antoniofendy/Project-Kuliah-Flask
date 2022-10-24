@@ -1,4 +1,3 @@
-from calendar import c
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from kelompok_1_uts.forms.staff import StaffForm
