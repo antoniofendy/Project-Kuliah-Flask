@@ -31,7 +31,7 @@ def create_app():
     app.register_blueprint(member_bp, url_prefix="/member")
     app.register_blueprint(charge_rule_bp, url_prefix="/charge-rule")
     app.register_blueprint(movie_bp, url_prefix="/movie")
-    app.register_blueprint(movie_category_bp, url_prefix="/movie/category")
+    app.register_blueprint(movie_category_bp, url_prefix="/category")
     app.register_blueprint(errors_bp)
 
     return app
