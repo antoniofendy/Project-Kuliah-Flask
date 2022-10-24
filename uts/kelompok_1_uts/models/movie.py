@@ -10,4 +10,4 @@ class Movie(db.Model):
     picture = db.Column(db.String(64), nullable=False)
 
     def __repr__(self) -> str:
-        return f"<Movie {self.judul}>"
+        return f"<Movie {self.title}>"

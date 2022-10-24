@@ -21,9 +21,9 @@ Tambah Kategori
 
     {% if form %}
     <form action="{% if data%}
-                    {{url_for('movie_category.update', id=data.id)}}
+                    {{url_for('movieCategory.update', id=data.id)}}
                     {% else %}
-                    {{url_for('movie_category.create')}}
+                    {{url_for('movieCategory.create')}}
                     {% endif %}
     " method="post">
         {% if data %}
@@ -38,7 +38,7 @@ Tambah Kategori
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.category_name.label() }}
-                {{ form.category_name(class_="form-control", value=data.category) }}
+                {{ form.category_name(class_="form-control", value=data.category_name) }}
             </div>
         </div>
 

@@ -1,5 +1,5 @@
 from kelompok_1_uts import db
-from kelompok_1_uts.models.movie_category import Category
+from kelompok_1_uts.models.movieCategory import MovieCategory
 
 def create(category):
     db.session.add(category)
@@ -7,24 +7,24 @@ def create(category):
 
 
 def update(category):
-    cur_category = db.get_or_404(Category, category["id"])
-    cur_category.category = category["category name"]
+    cur_category = db.get_or_404(MovieCategory, category["id"])
+    cur_category.category = category["category_name"]
 
     db.session.commit()
 
 
 def delete(category):
     print(category)
-    cur_category = db.get_or_404(Category, category["id"])
+    cur_category = db.get_or_404(MovieCategory, category["id"])
     db.session.delete(cur_category)
     db.session.commit()
 
 
 def get(id):
-    return db.get_or_404(Category, id)
+    return db.get_or_404(MovieCategory, id)
 
 
 def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
-    response = Category.query.order_by(Category.id.asc()).all()
+    response = MovieCategory.query.order_by(MovieCategory.id.asc()).all()
     return response

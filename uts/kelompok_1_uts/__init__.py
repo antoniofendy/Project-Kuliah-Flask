@@ -22,7 +22,7 @@ def create_app():
     from kelompok_1_uts.routes.member import bp as member_bp
     from kelompok_1_uts.routes.charge_rule import bp as charge_rule_bp
     from kelompok_1_uts.routes.movie import bp as movie_bp
-    from kelompok_1_uts.routes.movie_category import bp as category_bp
+    from kelompok_1_uts.routes.movieCategory import bp as category_bp
     from kelompok_1_uts.errors import bp as errors_bp
 
     app.register_blueprint(main_bp)

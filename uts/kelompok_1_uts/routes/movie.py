@@ -6,10 +6,19 @@ from kelompok_1_uts.controllers import movie as movie_controller
 
 bp = Blueprint("movie", __name__, template_folder="templates", static_folder="static")
 
-@bp.route("/")
-def index():
-    
+
+
+@bp.route("/", defaults={"id": None})
+@bp.route("/<int:id>")
+def index(id):
+    if id:
+        form = MovieForm()
+        data = movie_controller.get(id)
+
+        return render_template("movie/form.html", form=form, data=data)
+
     data = movie_controller.get_all()
+
     return render_template("movie/list.html", data=data)
     
 
