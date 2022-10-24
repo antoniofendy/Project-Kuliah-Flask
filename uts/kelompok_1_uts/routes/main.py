@@ -2,7 +2,7 @@ import os
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from werkzeug.utils import secure_filename  
+from werkzeug.utils import secure_filename
 
 from kelompok_1_uts.forms.staff import StaffForm
 from kelompok_1_uts.models.staff import Staff
@@ -12,11 +12,12 @@ from random import *
 
 bp = Blueprint("main", __name__)
 
-UPLOAD_FOLDER = 'kelompok_1_uts/static/upload/staff'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+UPLOAD_FOLDER = "kelompok_1_uts/static/upload/staff"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route("/index")
@@ -52,11 +53,17 @@ def new_staff():
 
         unique_pic_name = randint(100, 99999)
 
-        file = request.files['picture']
+        file_ext = None
+        file = request.files["picture"]
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_ext = os.path.splitext(filename)[1]
-            file.save(os.path.join(UPLOAD_FOLDER, "{fname}{fext}".format(fname=unique_pic_name, fext=file_ext)))
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fname}{fext}".format(fname=unique_pic_name, fext=file_ext),
+                )
+            )
 
         staff_controller.create(
             Staff(
@@ -80,14 +87,22 @@ def update_staff(id_):
 
     old_data = staff_controller.get(id_)
 
-    file = request.files['picture']
+    file = request.files["picture"]
 
-    if file.filename != '':
+    if file.filename != "":
+        file_ext = None
 
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_ext = os.path.splitext(filename)[1]
-            file.save(os.path.join(UPLOAD_FOLDER, "{fname}{fext}".format(fname=old_data.picture.partition('.')[0], fext=file_ext)))
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fname}{fext}".format(
+                        fname=old_data.picture.partition(".")[0], fext=file_ext
+                    ),
+                )
+            )
 
         staff_controller.update(
             {
@@ -95,10 +110,12 @@ def update_staff(id_):
                 "name": request.form.get("name"),
                 "phone": request.form.get("phone"),
                 "address": request.form.get("address"),
-                "picture": "{fname}{fext}".format(fname=old_data.picture.partition('.')[0], fext=file_ext),
+                "picture": "{fname}{fext}".format(
+                    fname=old_data.picture.partition(".")[0], fext=file_ext
+                ),
             }
         )
-    
+
     else:
         staff_controller.update(
             {

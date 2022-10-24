@@ -47,7 +47,6 @@ def create():
     form.movie.choices = movies_list
 
     if request.method == "POST":
-        print(request.form)
         stock_controller.create(
             Stock(
                 qty=request.form.get("qty"),
