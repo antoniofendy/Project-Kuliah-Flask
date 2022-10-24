@@ -1,9 +1,15 @@
 from kelompok_1_uts import db
 from kelompok_1_uts.models.staff import Staff
 
+UPLOAD_FOLDER = 'kelompok_1_uts/static/upload'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
 def create(staff):
     db.session.add(staff)
     db.session.commit()
+
+    db.session.refresh(staff)
+    return staff.id
 
 
 def update(staff):
@@ -30,3 +36,4 @@ def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
     response = Staff.query.order_by(Staff.id.asc()).all()
     return response
+

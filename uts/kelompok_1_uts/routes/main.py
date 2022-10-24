@@ -8,9 +8,11 @@ from kelompok_1_uts.forms.staff import StaffForm
 from kelompok_1_uts.models.staff import Staff
 from kelompok_1_uts.controllers import staff as staff_controller
 
+from random import *
+
 bp = Blueprint("main", __name__)
 
-UPLOAD_FOLDER = 'static/upload'
+UPLOAD_FOLDER = 'kelompok_1_uts/static/upload/staff'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 def allowed_file(filename):
@@ -48,10 +50,13 @@ def new_staff():
 
     if request.method == "POST":
 
+        unique_pic_name = randint(100, 99999)
+
         file = request.files['picture']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file_ext = os.path.splitext(filename)[1]
+            file.save(os.path.join(UPLOAD_FOLDER, "{fname}{fext}".format(fname=unique_pic_name, fext=file_ext)))
 
         staff_controller.create(
             Staff(
@@ -60,7 +65,7 @@ def new_staff():
                 password=request.form.get("password"),
                 phone=request.form.get("phone"),
                 address=request.form.get("address"),
-                picture=request.form.get("picture"),
+                picture="{fname}{fext}".format(fname=unique_pic_name, fext=file_ext),
             )
         )
 
@@ -72,15 +77,38 @@ def new_staff():
 
 @bp.route("/staff/update/<int:id_>", methods=["POST"])
 def update_staff(id_):
-    staff_controller.update(
-        {
-            "id": int(id_),
-            "name": request.form.get("name"),
-            "phone": request.form.get("phone"),
-            "address": request.form.get("address"),
-            "picture": request.form.get("picture"),
-        }
-    )
+
+    old_data = staff_controller.get(id_)
+
+    if 'file' in request.files:
+        
+
+        file = request.files['picture']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1]
+            file.save(os.path.join(UPLOAD_FOLDER, "{fname}{fext}".format(fname=old_data.picture.partition('.')[0], fext=file_ext)))
+
+        staff_controller.update(
+            {
+                "id": int(id_),
+                "name": request.form.get("name"),
+                "phone": request.form.get("phone"),
+                "address": request.form.get("address"),
+                "picture": "{fname}{fext}".format(fname=old_data.picture.partition('.')[0], fext=file_ext),
+            }
+        )
+    
+    else:
+        staff_controller.update(
+            {
+                "id": int(id_),
+                "name": request.form.get("name"),
+                "phone": request.form.get("phone"),
+                "address": request.form.get("address"),
+                "picture": old_data.picture,
+            }
+        )
 
     flash("Data staf berhasil diubah.", category="primary")
     return redirect(url_for("main.show_staff", id=None))
@@ -88,6 +116,10 @@ def update_staff(id_):
 
 @bp.route("/staff/delete/", methods=["POST"])
 def delete_staff():
+
+    old_data = staff_controller.get(request.form.get("id"))
+
+    os.remove(os.path.join(UPLOAD_FOLDER, old_data.picture))
     staff_controller.delete(request.form.get("id"))
 
     flash("Data staf berhasil dihapus.", category="danger")
