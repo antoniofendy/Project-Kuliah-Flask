@@ -19,7 +19,7 @@ def update(movie):
 
 def delete(movie):
     print(movie)
-    cur_movie = db.get_or_404(Movie, movie["id"])
+    cur_movie = db.get_or_404(Movie, id)
     db.session.delete(cur_movie)
     db.session.commit()
 

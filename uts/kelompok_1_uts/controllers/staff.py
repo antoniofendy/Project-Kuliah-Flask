@@ -1,7 +1,6 @@
 from kelompok_1_uts import db
 from kelompok_1_uts.models.staff import Staff
 
-
 def create(staff):
     db.session.add(staff)
     db.session.commit()

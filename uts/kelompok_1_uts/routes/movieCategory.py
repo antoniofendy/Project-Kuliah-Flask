@@ -43,7 +43,7 @@ def update(id):
     category_controller.update(
         {
             "id": int(id),
-            "category": request.form.get("category"),
+            "category_name": request.form.get("category_name"),
         }
     )
 
@@ -57,4 +57,4 @@ def delete():
     category_controller.delete(request.form.get("id"))
 
     flash("Data kategori berhasil dihapus.", category="danger")
-    return redirect(url_for("movieCategory.index"))
+    return redirect(url_for("movieCategory.index", id=None))

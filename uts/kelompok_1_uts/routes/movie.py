@@ -7,7 +7,6 @@ from kelompok_1_uts.controllers import movie as movie_controller
 bp = Blueprint("movie", __name__, template_folder="templates", static_folder="static")
 
 
-
 @bp.route("/", defaults={"id": None})
 @bp.route("/<int:id>")
 def index(id):
@@ -43,10 +42,10 @@ def create():
 
 
 @bp.route("/update/<int:id>", methods=["POST"])
-def update(id):
+def update(id_):
     movie_controller.update(
         {
-            "id": int(id),
+            "id": int(id_),
             "title": request.form.get("title"),
             "synopsis": request.form.get("synopsis"),
             "duration": request.form.get("duration"),
@@ -68,4 +67,4 @@ def delete():
     movie_controller.delete(request.form.get("id"))
 
     flash("Data Film berhasil dihapus.", category="danger")
-    return redirect(url_for("movie.index"))
+    return redirect(url_for("movie.index", id=None))
