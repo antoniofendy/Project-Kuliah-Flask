@@ -80,10 +80,10 @@ def update_staff(id_):
 
     old_data = staff_controller.get(id_)
 
-    if 'file' in request.files:
-        
+    file = request.files['picture']
 
-        file = request.files['picture']
+    if file.filename != '':
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_ext = os.path.splitext(filename)[1]
