@@ -1,0 +1,91 @@
+{% extends 'list.html' %}
+
+{% block title %}Daftar Aturan Denda{% endblock %}
+
+{% block list %}
+<div class="h3 mb-2 text-gray-800">
+    Daftar Aturan Denda
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{category}} mb-2">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endwith %}
+
+
+
+
+<div class="mb-2 ml-auto">
+    <a href="{{url_for('charge_rule.create')}}" class="btn btn-primary">
+        <i class="fas fa-plus mr-1"></i>
+        Aturan Denda Baru
+    </a>
+</div>
+
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nama Aturan</th>
+            <th scope="col">Nilai</th>
+            <th scope="col">Tipe</th>
+            <th scope="col">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in data %}
+        <tr>
+            <th scope="row">{{ d.id }}</th>
+            <td>{{ d.name }}</td>
+            <td>{{ d.amount }}</td>
+            <td>{{ d.type.value }}</td>
+            <td>
+                <a href="{{ url_for('charge_rule.show', id=d.id) }}" class="btn text-primary bg-transparent"><i
+                        class="fas fa-fw fa-pen"></i></a>
+                <button class="btn text-danger bg-transparent"><i class="fas fa-fw fa-trash" data-id="{{ d.id }}"
+                        data-toggle="modal" data-target="#deleteModal"></i></button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5>Anda yakin ingin menghapus aturan denda ini?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ url_for('charge_rule.delete') }}" method="post">
+                    <input type="hidden" name="id" id="delete_id" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="submit" class="btn btn-danger">Ya</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+    $('#deleteModal').on('show.bs.modal', function (e) {
+        let button = $(e.relatedTarget)
+        let charge_rule_id = button.data('id')
+
+        let modal = $(this)
+
+        modal.find('.modal-footer #delete_id').val(charge_rule_id)
+    })
+</script>
+
+{% endblock %}

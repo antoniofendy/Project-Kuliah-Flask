@@ -14,15 +14,15 @@ def show(id):
         form = ChargeRuleForm()
         data = charge_rule_controller.get(id)
 
-        form.gender.choices = [('laki-laki', 'Laki-laki'), ('perempuan', 'Perempuan')]
-        form.gender.default = data.gender
+        form.type.choices = [('PERCENTAGE', 'Persentase'), ('NOMINAL', 'Nominal')]
+        form.type.default = data.type.name
 
         form.process()
 
-        return render_template("member/form.html", form=form, data=data)
+        return render_template("charge_rule/form.html", form=form, data=data)
     
     data = charge_rule_controller.get_all()
-    return render_template("member/list.html", data=data)
+    return render_template("charge_rule/list.html", data=data)
     
 
 @bp.route("/create", methods=["GET", "POST"])
@@ -30,20 +30,17 @@ def create():
     form = ChargeRuleForm()
     if request.method == "POST":
         charge_rule_controller.create(
-            Member(
+            ChargeRule(
                 name=request.form.get("name"),
-                gender=request.form.get("gender"),
-                birth=request.form.get("birth"),
-                address=request.form.get("address"),
-                phone=request.form.get("phone"),
-                email=request.form.get("email"),
+                amount=request.form.get("amount"),
+                type=request.form.get("type"),
             )
         )
 
-        flash("Data staf berhasil ditambahkan.", category="success")
-        return redirect(url_for("member.show"))
+        flash("Aturan denda baru berhasil ditambahkan.", category="success")
+        return redirect(url_for("charge_rule.show"))
 
-    return render_template("member/form.html", form=form, data=None)
+    return render_template("charge_rule/form.html", form=form, data=None)
 
 @bp.route("/update/<int:id>", methods=["POST"])
 def update(id):
@@ -51,22 +48,19 @@ def update(id):
         {
             "id": int(id),
             "name": request.form.get("name"),
-            "gender": request.form.get("gender"),
-            "birth": request.form.get("birth"),
-            "address": request.form.get("address"),
-            "phone": request.form.get("phone"),
-            "email": request.form.get("email"),
+            "amount": request.form.get("amount"),
+            "type": request.form.get("type"),
         }
     )
 
-    flash("Data member berhasil diubah.", category="primary")
-    return redirect(url_for("member.show"))
+    flash("Aturan denda berhasil diubah.", category="primary")
+    return redirect(url_for("charge_rule.show"))
 
 
 @bp.route("/delete", methods=["POST"])
 def delete():
     charge_rule_controller.delete(request.form.get("id"))
 
-    flash("Data member berhasil dihapus.", category="danger")
-    return redirect(url_for("member.show"))
+    flash("Aturan denda berhasil dihapus.", category="danger")
+    return redirect(url_for("charge_rule.show"))
 

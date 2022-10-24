@@ -4,7 +4,7 @@
 {% if data %}
 {{data.name}}
 {% else %}
-Member Baru
+Aturan Denda Baru
 {% endif %}
 {% endblock %}
 
@@ -15,15 +15,15 @@ Member Baru
         {% if data %}
         {{data.name}}
         {% else %}
-        Member Baru
+        Aturan Denda Baru
         {% endif %}
     </div>
 
     {% if form %}
     <form action="{% if data%}
-                    {{url_for('member.update', id=data.id)}}
+                    {{url_for('charge_rule.update', id=data.id)}}
                     {% else %}
-                    {{url_for('member.create')}}
+                    {{url_for('charge_rule.create')}}
                     {% endif %}
     " method="post">
         {% if data %}
@@ -41,37 +41,28 @@ Member Baru
                 {{ form.name(class_="form-control", value=data.name) }}
             </div>
         </div>
+
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.gender.label() }}
-                {{ form.gender(class_="form-control", value=data.gender) }}
+                {{ form.amount.label() }}
+                {{ form.amount(class_="form-control", value=data.amount) }}
             </div>
         </div>
+        {% if data.id %}
         <div class="form-row my-2">
-            <div class="col-12 col-xl-6 m-md-0">
-                {{ form.birth.label }}
-                {{ form.birth(class_="form-control", value=data.birth) }}
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.type.label() }}
+                {{ form.type(class_="form-control", value=data.type.name) }}
             </div>
         </div>
+        {% else %}
         <div class="form-row my-2">
-            <div class="col-12 col-xl-6 m-md-0">
-                {{ form.address.label }}
-                <textarea required min="10" max="data.address" class="form-control" id="body" name="address"
-                    style="min-height: 80px">{{data.address}}</textarea>
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.type.label() }}
+                {{ form.type(class_="form-control") }}
             </div>
         </div>
-        <div class="form-row my-2">
-            <div class="col-12 col-xl-6 m-md-0">
-                {{ form.phone.label }}
-                {{ form.phone(class_="form-control", value=data.phone) }}
-            </div>
-        </div>
-        <div class="form-row my-3">
-            <div class="col-12 col-xl-6 m-md-0">
-                {{ form.email.label }}
-                {{ form.email(class_="form-control", value=data.email) }}
-            </div>
-        </div>
+        {% endif %}
 
 
         {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
