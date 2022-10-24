@@ -8,6 +8,8 @@ from os import urandom
 class Config:
     SECRET_KEY = urandom(32)
 
+    UPLOAD_FOLDER = 'static/upload'
+
     DB_NAME = "kelompok_1_uts"
     SQLALCHEMY_DATABASE_URI = f"mysql://root:@localhost/{DB_NAME}"
     SQLALCHEMY_TRACK_MODIFIFACTIONS = False

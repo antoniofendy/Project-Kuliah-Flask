@@ -44,8 +44,8 @@
             <td>
                 <a href="{{url_for('movieCategory.index', id=d.id)}}" type="button"
                     class="btn text-primary bg-transparent"><i class="fas fa-fw fa-pen"></i></a>
-                <button class="btn text-danger bg-transparent" data-toggle="modal" data-target="#deleteModal"><i
-                        class="fas fa-fw fa-trash" data-id="{{ d.id }}"></i></button>
+                <button class="btn text-danger bg-transparent" data-toggle="modal" data-target="#deleteModal"
+                    data-id="{{ d.id }}"><i class="fas fa-fw fa-trash"></i></button>
             </td>
         </tr>
         {% endfor %}

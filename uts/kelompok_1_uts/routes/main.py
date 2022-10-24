@@ -1,10 +1,20 @@
+import os
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+
+from werkzeug.utils import secure_filename  
 
 from kelompok_1_uts.forms.staff import StaffForm
 from kelompok_1_uts.models.staff import Staff
 from kelompok_1_uts.controllers import staff as staff_controller
 
 bp = Blueprint("main", __name__)
+
+UPLOAD_FOLDER = 'static/upload'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route("/index")
@@ -37,6 +47,12 @@ def new_staff():
     form = StaffForm()
 
     if request.method == "POST":
+
+        file = request.files['picture']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+
         staff_controller.create(
             Staff(
                 name=request.form.get("name"),
