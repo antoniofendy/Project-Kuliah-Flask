@@ -1,13 +1,11 @@
+from calendar import c
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from kelompok_1_uts.forms.charge_rule import ChargeRuleForm
 from kelompok_1_uts.models.charge_rule import ChargeRule
 from kelompok_1_uts.controllers import charge_rule as charge_rule_controller
 
-bp = Blueprint(
-    "charge_rule", __name__, template_folder="templates", static_folder="static"
-)
-
+bp = Blueprint("charge_rule", __name__, template_folder="templates", static_folder="static")
 
 @bp.route("/", defaults={"id": None})
 @bp.route("/<int:id>")
@@ -16,16 +14,16 @@ def show(id):
         form = ChargeRuleForm()
         data = charge_rule_controller.get(id)
 
-        form.type.choices = [("PERCENTAGE", "Persentase"), ("NOMINAL", "Nominal")]
+        form.type.choices = [('PERCENTAGE', 'Persentase'), ('NOMINAL', 'Nominal')]
         form.type.default = data.type.name
 
         form.process()
 
         return render_template("charge_rule/form.html", form=form, data=data)
-
+    
     data = charge_rule_controller.get_all()
     return render_template("charge_rule/list.html", data=data)
-
+    
 
 @bp.route("/create", methods=["GET", "POST"])
 def create():
@@ -43,7 +41,6 @@ def create():
         return redirect(url_for("charge_rule.show"))
 
     return render_template("charge_rule/form.html", form=form, data=None)
-
 
 @bp.route("/update/<int:id>", methods=["POST"])
 def update(id):
@@ -66,3 +63,4 @@ def delete():
 
     flash("Aturan denda berhasil dihapus.", category="danger")
     return redirect(url_for("charge_rule.show"))
+
