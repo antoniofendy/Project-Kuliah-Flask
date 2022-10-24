@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Pembayaran
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        Pembayaran
+    </div>
+
+    {% if form %}
+    <form action="{{url_for('rental.pay')}}" method="post" enctype="multipart/form-data">
+        {% if data.id %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.transaction_id.label() }}
+                {{ form.transaction_id(class_="form-control", value=data.transaction_id, readonly=true) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.type.label }}
+                {{ form.type(class_="form-control", value=data.transaction_type.name, disabled=true) }}
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.amount.label }}
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Rp</span>
+                    </div>
+                    {{ form.amount(class_="form-control", value=data.amount, readonly=true)}}
+                </div>
+            </div>
+        </div>
+        <div class="form-row my-2">
+            <div class="col-12 col-xl-6 m-md-0">
+                {{ form.status.label }}
+                {{ form.status(class_="form-control", value=data.status.value, readonly=true)}}
+            </div>
+        </div>
+
+        {% if data.status.name == 'UNPAID' %}
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+        {% endif %}
+
+
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script>
+    $('form').submit(function (e) {
+        $(':disabled').each(function (e) {
+            $(this).removeAttr('disabled');
+        })
+    });
+</script>
+{% endblock %}
