@@ -75,6 +75,7 @@
 {% endblock %}
 
 {% block script %}
+{{super()}}
 
 <script>
     $('#deleteModal').on('show.bs.modal', function (e) {
