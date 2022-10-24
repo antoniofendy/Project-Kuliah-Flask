@@ -42,10 +42,10 @@ def create():
 
 
 @bp.route("/update/<int:id>", methods=["POST"])
-def update(id_):
+def update(id):
     movie_controller.update(
         {
-            "id": int(id_),
+            "id": int(id),
             "title": request.form.get("title"),
             "synopsis": request.form.get("synopsis"),
             "duration": request.form.get("duration"),
