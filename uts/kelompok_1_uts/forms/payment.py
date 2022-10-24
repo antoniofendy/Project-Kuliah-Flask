@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 
 from wtforms import IntegerField, SelectField, DateField, SubmitField, StringField
-from wtforms.validators import DataRequired, Length
-from datetime import datetime, timedelta
+
+from kelompok_1_uts.models.payment import PaymentType
 
 
 class PaymentForm(FlaskForm):
@@ -12,8 +12,8 @@ class PaymentForm(FlaskForm):
         "Tipe Transaksi",
         render_kw={"readonly": True},
         choices=[
-            ("PAYMENT", "Pembayaran"),
-            ("CHARGE", "Denda"),
+            (PaymentType.PAYMENT.name, "Pembayaran"),
+            (PaymentType.CHARGE.name, "Denda"),
         ],
     )
     amount = IntegerField("Jumlah Harus Dibayar", render_kw={"readonly": True})

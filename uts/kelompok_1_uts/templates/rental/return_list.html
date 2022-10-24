@@ -1,0 +1,55 @@
+{% extends 'list.html' %}
+
+{% block title %}Daftar Transaksi{% endblock %}
+
+{% block list %}
+<div class="h3 mb-2 text-gray-800">
+    Daftar Transaksi
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{category}} mb-2">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endwith %}
+
+
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Member</th>
+            <th scope="col">Film</th>
+            <th scope="col">Status</th>
+            <th scope="col">Tanggal Sewa</th>
+            <th scope="col">Tanggal Akhir</th>
+            <th scope="col">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in data %}
+        <tr>
+            <th scope="row" class="col-md-1">{{d.id}}</th>
+            <td>{{d.member.name}}</td>
+            <td>{{d.stock.movie.title}}</td>
+            <td><span
+                    class="badge badge-{{'success' if d.status.name == 'RENT' else 'warning' if d.status.name == 'UNPAID' else 'secondary'}}">{{d.status.value}}</span>
+            </td>
+            <td>{{d.rental_start_date.strftime('%d-%m-%Y')}}</td>
+            <td>{{d.rental_end_date.strftime('%d-%m-%Y')}}</td>
+            <td class="col-md-1">
+                <a href="{{url_for('rental.show_transaction', id=d.id)}}" type="button"
+                    class="btn text-primary bg-transparent"><i class="fas fa-fw fa-eye"></i></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

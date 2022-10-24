@@ -13,7 +13,7 @@ class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stock_id = db.Column(db.Integer, db.ForeignKey("stock.id"), nullable=False)
     member_id = db.Column(db.Integer, db.ForeignKey("member.id"), nullable=False)
-    staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey("staff.id"))
     charge_id = db.Column(db.Integer, db.ForeignKey("charge_rule.id"), nullable=False)
 
     rental_start_date = db.Column(db.Date, nullable=False)

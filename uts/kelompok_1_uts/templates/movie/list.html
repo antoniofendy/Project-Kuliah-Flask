@@ -36,22 +36,18 @@
             <th scope="col">Kategori</th>
             <th scope="col">Durasi</th>
             <th scope="col">Aktor</th>
-            <th scope="col">Sinopsis</th>
-            <th scope="col">Gambar</th>
             <th scope="col">Aksi</th>
         </tr>
     </thead>
     <tbody>
         {% for d in data %}
         <tr>
-            <th scope="row">{{ d.id }}</th>
+            <th scope="row" class="col-md-1">{{ d.id }}</th>
             <td>{{ d.title }}</td>
             <td>{{ d.category }}</td>
             <td>{{ d.duration }}</td>
             <td>{{ d.actor }}</td>
-            <td>{{ d.synopsis }}</td>
-            <td>{{ d.picture }}</td>
-            <td>
+            <td class="col-md-2">
                 <a href="{{url_for('movie.index', id=d.id)}}" type="button" class="btn text-primary bg-transparent"><i
                         class="fas fa-fw fa-pen"></i></a>
                 <button class="btn text-danger bg-transparent" data-toggle="modal" data-target="#deleteModal"

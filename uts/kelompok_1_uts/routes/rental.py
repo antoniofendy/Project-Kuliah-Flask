@@ -126,14 +126,20 @@ def new_transaction():
     return render_template("rental/form.html", form=form, data=None)
 
 
-@bp.route("/return")
-def return_transaction():
-    return "<h1>Kembali</h1>"
+@bp.route("/return", defaults={"id": None})
+@bp.route("/return/<int:id>")
+def return_transaction(id):
+    if id:
+        return_ = transaction_controller.return_(id)
 
+        if return_:
+            return redirect(url_for("rental.show_transaction"))
+        else:
+            return redirect(url_for("rental.show_payment", id=id, charge=1))
 
-@bp.route("/update/<int:id>", methods=["POST"])
-def update_transaction(id):
-    return ""
+    data = transaction_controller.get_all_non_returned()
+
+    return render_template("rental/return_list.html", data=data)
 
 
 @bp.route("/delete/", methods=["POST"])
@@ -144,15 +150,19 @@ def delete_transaction():
     return redirect(url_for("rental.show_transaction", id=None))
 
 
-@bp.route("/payment", defaults={"id": None})
-@bp.route("/payment/<int:id>")
-def show_payment(id):
+@bp.route("/payment", defaults={"id": None, "charge": 0})
+@bp.route("/payment/<int:id>/<int:charge>")
+def show_payment(id, charge):
     if id:
         form = PaymentForm()
 
-        data = payment_controller.get(id)
+        data = payment_controller.get(id, charge)
 
-        form.type.default = data.transaction_type
+        form.type.default = data.transaction_type.name
+        print(data.transaction_type)
+        form.process()
+
+        print(data.transaction_type)
         form.process()
 
         return render_template("rental/payment.html", form=form, data=data)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import flash, redirect, url_for
 from kelompok_1_uts import db
 from kelompok_1_uts.models.transaction import Transaction
@@ -6,6 +7,7 @@ from kelompok_1_uts.models.charge_rule import ChargeRule
 from kelompok_1_uts.models.member import Member
 from kelompok_1_uts.models.movie import Movie
 from kelompok_1_uts.models.payment import Payment
+from kelompok_1_uts.models.transaction import TransactionStatus
 
 
 def create(transaction):
@@ -61,3 +63,31 @@ def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
     response = Transaction.query.order_by(Transaction.id).all()
     return response
+
+
+def get_all_non_returned():
+    response = (
+        Transaction.query.order_by(Transaction.id)
+        .where(Transaction.status == TransactionStatus.RENT)
+        .all()
+    )
+    return response
+
+
+def return_(id):
+    transaction = Transaction.query.where(
+        Transaction.id == id and Transaction.status == TransactionStatus.RENT
+    ).all()
+
+    transaction = transaction[0]
+
+    if (
+        transaction.rental_end_date < datetime.now().date()
+        and transaction.charge_rule.amount > 0
+    ):
+        return False
+
+    transaction.status = TransactionStatus.RETURNED
+    transaction.stock.qty = transaction.stock.qty + 1
+    db.session.commit()
+    return True

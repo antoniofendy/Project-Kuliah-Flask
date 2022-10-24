@@ -25,6 +25,7 @@
             <th scope="col">ID</th>
             <th scope="col">Atas Transaksi</th>
             <th scope="col">Tipe Transaksi</th>
+            <th scope="col">Status</th>
             <th scope="col">Jumlah</th>
             <th scope="col">Aksi</th>
         </tr>
@@ -35,10 +36,9 @@
             <th scope="row" class="col-md-1">{{ d.id }}</th>
             <td>{{ d.transaction_id }}</td>
             <td>{{ d.transaction_type.value }}</td>
+            <td>{{ d.status.value }}</td>
             <td>{{ d.amount }}</td>
-            <td class="col-md-2">
-                <a href="{{url_for('rental.show_payment', id=d.id)}}" type="button"
-                    class="btn text-primary bg-transparent"><i class="fas fa-fw fa-pen"></i></a>
+            <td class="col-md-1">
                 <button class="btn text-danger bg-transparent" data-id="{{ d.id }}" data-toggle="modal"
                     data-target="#deleteModal"><i class="fas fa-fw fa-trash"></i></button>
             </td>

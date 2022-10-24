@@ -19,7 +19,6 @@ class MemberForm(FlaskForm):
     gender = SelectField(
         "Gender",
         choices=[
-            ("placeholder", "Pilih gender"),
             ("laki-laki", "Laki-laki"),
             ("perempuan", "Perempuan"),
         ],
