@@ -1,12 +1,16 @@
 import os
-
+from datetime import datetime
+from sqlalchemy import extract
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from werkzeug.utils import secure_filename
 
 from kelompok_1_uts.forms.staff import StaffForm
 from kelompok_1_uts.models.staff import Staff
+from kelompok_1_uts.models.transaction import Transaction
+from kelompok_1_uts.models.payment import Payment
 from kelompok_1_uts.controllers import staff as staff_controller
+from kelompok_1_uts import db
 
 from random import *
 
@@ -23,7 +27,24 @@ def allowed_file(filename):
 @bp.route("/index")
 @bp.route("/")
 def index():
-    return render_template("index.html")
+    dashboard_data = {
+        "monthly_earning": db.session.query(Transaction).join(Payment).where(Transaction.id == Payment.transaction_id)
+            .with_entities(db.func.sum(Payment.amount))
+            .filter(extract('month', Transaction.rental_start_date) == datetime.today().month).first()[0],
+        "annual_earning" : db.session.query(Transaction).join(Payment).where(Transaction.id == Payment.transaction_id)
+            .with_entities(db.func.sum(Payment.amount))
+            .filter(extract('day', Transaction.rental_start_date) == datetime.today().day)
+            .first()[0],
+        "ongoing_transaction" : db.session.query(Transaction).filter(Transaction.status == 'RENT')
+            .count(),
+        "charged_transaction" : db.session.query(Transaction).filter(Transaction.rental_end_date < datetime.today(), Transaction.status == 'RENT')
+            .count(),
+        "all_transaction" : db.session.query(Transaction).all()
+    }
+
+    print(type(dashboard_data['monthly_earning']))
+    
+    return render_template("index.html", dashboard_data=dashboard_data)
 
 
 @bp.route("/settings")
