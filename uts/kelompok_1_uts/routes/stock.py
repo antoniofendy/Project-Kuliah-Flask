@@ -77,7 +77,7 @@ def update(id):
 
 @bp.route("/delete", methods=["POST"])
 def delete():
-    stock_controller.delete(request.form.get("id"))
+    if stock_controller.delete(request.form.get("id")):
+        flash("Data stok berhasil dihapus.", category="info")
 
-    flash("Data stok berhasil dihapus.", category="info")
     return redirect(url_for("stock.show"))

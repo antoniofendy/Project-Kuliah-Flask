@@ -1,6 +1,8 @@
+from flask import flash, redirect, url_for
 from kelompok_1_uts import db
 from kelompok_1_uts.models.stock import Stock
 from kelompok_1_uts.models.movie import Movie
+from kelompok_1_uts.models.transaction import Transaction
 
 
 def create(stock):
@@ -18,8 +20,18 @@ def update(stock):
 
 def delete(id):
     cur_stock = db.get_or_404(Stock, id)
+
+    transaction_of_stock = Transaction.query.where(Transaction.stock_id == id).all()
+    if transaction_of_stock:
+        flash(
+            f"Stok {cur_stock.movie.title} tidak dapat dihapus karena terkait dengan data Transaksi.",
+            category="danger",
+        )
+        return redirect(url_for("stock.show")) and False
+
     db.session.delete(cur_stock)
     db.session.commit()
+    return True
 
 
 def get(id):
