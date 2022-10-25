@@ -11,7 +11,6 @@ from kelompok_1_uts.models.payment import PaymentStatus
 
 def get(id, charge):
     transaction = db.session.get(Transaction, id)
-    print(id)
     price = transaction.stock.price
     start = transaction.rental_start_date
     end = transaction.rental_end_date
@@ -51,6 +50,10 @@ def pay(payment):
         TransactionStatus.RENT
         if payment.transaction_type == PaymentType.PAYMENT.name
         else TransactionStatus.RETURNED
+    )
+
+    transaction.stock.qty = transaction.stock.qty + (
+        1 if payment.transaction_type == PaymentType.CHARGE.name else 0
     )
 
     db.session.commit()
