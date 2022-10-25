@@ -68,5 +68,4 @@ def update(id):
 def delete():
     member_controller.delete(request.form.get("id"))
 
-    flash("Data member berhasil dihapus.", category="info")
     return redirect(url_for("member.show"))

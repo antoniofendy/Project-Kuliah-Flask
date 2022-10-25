@@ -41,5 +41,6 @@ def delete(id):
         )
         return redirect(url_for("member.show")) and False
     
+    flash("Data member berhasil dihapus.", category="info")
     db.session.delete(cur_member)
     db.session.commit()
