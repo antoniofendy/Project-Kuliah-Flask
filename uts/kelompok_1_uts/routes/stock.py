@@ -79,5 +79,5 @@ def update(id):
 def delete():
     stock_controller.delete(request.form.get("id"))
 
-    flash("Data stok berhasil dihapus.", category="danger")
+    flash("Data stok berhasil dihapus.", category="info")
     return redirect(url_for("stock.show"))

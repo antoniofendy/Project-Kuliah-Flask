@@ -16,8 +16,10 @@ bp = Blueprint("movie", __name__, template_folder="templates", static_folder="st
 UPLOAD_FOLDER = "kelompok_1_uts/static/upload/movie"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @bp.route("/", defaults={"id": None})
 @bp.route("/<int:id>")
@@ -26,7 +28,9 @@ def index(id):
         form = MovieForm()
         data = movie_controller.get(id)
 
-        movie_category = db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+        movie_category = (
+            db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+        )
         form.category.choices = [(c.id, c.category_name) for c in movie_category]
 
         for c in movie_category:
@@ -55,7 +59,9 @@ def create():
             file.save(
                 os.path.join(
                     UPLOAD_FOLDER,
-                    "{fname}{fext}".format(fname=request.form.get("title"), fext=file_ext),
+                    "{fname}{fext}".format(
+                        fname=request.form.get("title"), fext=file_ext
+                    ),
                 )
             )
 
@@ -63,7 +69,9 @@ def create():
             Movie(
                 title=request.form.get("title"),
                 synopsis=request.form.get("synopsis"),
-                picture="{fname}{fext}".format(fname=request.form.get("title"), fext=file_ext),
+                picture="{fname}{fext}".format(
+                    fname=request.form.get("title"), fext=file_ext
+                ),
                 duration=request.form.get("duration"),
                 actor=request.form.get("actor"),
                 movie_category_id=request.form.get("category"),
@@ -73,7 +81,9 @@ def create():
         flash("Data film berhasil ditambahkan.", category="success")
         return redirect(url_for("movie.index"))
 
-    movie_category = db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+    movie_category = (
+        db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+    )
 
     form.category.choices = [(c.id, c.category_name) for c in movie_category]
 
@@ -96,9 +106,7 @@ def update(id):
             file.save(
                 os.path.join(
                     UPLOAD_FOLDER,
-                    "{fname}{fext}".format(
-                        fname=old_data.title, fext=file_ext
-                    ),
+                    "{fname}{fext}".format(fname=old_data.title, fext=file_ext),
                 )
             )
 
@@ -109,9 +117,7 @@ def update(id):
                 "synopsis": request.form.get("synopsis"),
                 "duration": request.form.get("duration"),
                 "actor": request.form.get("actor"),
-                "picture": "{fname}{fext}".format(
-                            fname=old_data.title, fext=file_ext
-                        ),
+                "picture": "{fname}{fext}".format(fname=old_data.title, fext=file_ext),
                 "movie_category_id": request.form.get("category"),
             }
         )
@@ -141,8 +147,8 @@ def show():
 def delete():
     old_data = movie_controller.get(request.form.get("id"))
     os.remove(os.path.join(UPLOAD_FOLDER, old_data.picture))
-    
+
     if movie_controller.delete(request.form.get("id")):
-        flash("Data Film berhasil dihapus.", category="danger")
+        flash("Data Film berhasil dihapus.", category="info")
 
     return redirect(url_for("movie.index", id=None))
