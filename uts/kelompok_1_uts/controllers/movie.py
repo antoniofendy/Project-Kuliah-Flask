@@ -28,11 +28,12 @@ def delete(id):
     stock_of_movie = Stock.query.where(Stock.movie_id == id).all()
     if stock_of_movie:
         flash(
-            f"Film {cur_movie.title} tidak dapat dihapus karena terkait dengan data Stok",
+            f"Film <b>'{cur_movie.title}</b> tidak dapat dihapus karena terkait dengan data Stok",
             category="danger",
         )
         return redirect(url_for("movie.index")) and False
 
+    flash("Data kategori berhasil dihapus.", category="info")
     db.session.delete(cur_movie)
     db.session.commit()
     return True

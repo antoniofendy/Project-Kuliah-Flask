@@ -55,6 +55,4 @@ def update(id):
 @bp.route("/delete", methods=["POST"])
 def delete():
     category_controller.delete(request.form.get("id"))
-
-    flash("Data kategori berhasil dihapus.", category="info")
     return redirect(url_for("movie_category.index", id=None))

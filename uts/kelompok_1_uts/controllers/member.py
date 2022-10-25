@@ -1,5 +1,7 @@
 from kelompok_1_uts import db
 from kelompok_1_uts.models.member import Member
+from kelompok_1_uts.models.transaction import Transaction
+from flask import flash, redirect, url_for
 
 def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
@@ -30,5 +32,14 @@ def update(member):
 
 def delete(id):
     cur_member = db.get_or_404(Member, id)
+    
+    member_transaction = Transaction.query.where(Transaction.member_id == id).all()
+    if member_transaction:
+        flash(
+            f"Member {cur_member.name} tidak dapat dihapus karena terkait dengan data Transaksi",
+            category="danger",
+        )
+        return redirect(url_for("member.show")) and False
+    
     db.session.delete(cur_member)
     db.session.commit()
