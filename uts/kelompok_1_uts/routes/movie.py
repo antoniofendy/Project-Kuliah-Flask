@@ -146,7 +146,7 @@ def show():
 @bp.route("/delete", methods=["POST"])
 def delete():
     old_data = movie_controller.get(request.form.get("id"))
-    os.remove(os.path.join(UPLOAD_FOLDER, old_data.picture))
+    ##os.remove(os.path.join(UPLOAD_FOLDER, old_data.picture))
 
     if movie_controller.delete(request.form.get("id")):
         flash("Data Film berhasil dihapus.", category="info")
