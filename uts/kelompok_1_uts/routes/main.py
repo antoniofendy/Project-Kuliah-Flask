@@ -175,5 +175,5 @@ def delete_staff():
     os.remove(os.path.join(UPLOAD_FOLDER, old_data.picture))
     staff_controller.delete(request.form.get("id"))
 
-    flash("Data staf berhasil dihapus.", category="danger")
+    flash("Data staf berhasil dihapus.", category="info")
     return redirect(url_for("main.show_staff", id=None))
