@@ -145,7 +145,7 @@ def return_transaction(id):
 @bp.route("/delete/", methods=["POST"])
 def delete_transaction():
     if transaction_controller.delete(request.form.get("id")):
-        flash("Data transaksi berhasil dihapus.", category="danger")
+        flash("Data transaksi berhasil dihapus.", category="info")
 
     return redirect(url_for("rental.show_transaction", id=None))
 
