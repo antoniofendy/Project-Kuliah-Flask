@@ -33,7 +33,7 @@ def create():
             )
         )
 
-        flash("Data staf berhasil ditambahkan.", category="success")
+        flash("Data kategori berhasil ditambahkan.", category="success")
         return redirect(url_for("movie_category.index"))
 
     return render_template("movie_category/form.html", form=form, data=None)

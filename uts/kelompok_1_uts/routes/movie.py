@@ -35,7 +35,7 @@ def create():
             )
         )
 
-        flash("Data staf berhasil ditambahkan.", category="success")
+        flash("Data film berhasil ditambahkan.", category="success")
         return redirect(url_for("movie.index"))
 
     return render_template("movie/form.html", form=form, data=None)
@@ -54,7 +54,7 @@ def update(id):
         }
     )
 
-    flash("Data member berhasil diubah.", category="primary")
+    flash("Data film berhasil diubah.", category="primary")
     return redirect(url_for("movie.index"))
 
 
