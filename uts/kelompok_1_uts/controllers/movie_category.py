@@ -9,13 +9,12 @@ def create(category):
 
 def update(category):
     cur_category = db.get_or_404(MovieCategory, category["id"])
-    cur_category.category = category["category_name"]
+    cur_category.category_name = category["category_name"]
 
     db.session.commit()
 
 
-def delete(category):
-    print(category)
+def delete(id):
     cur_category = db.get_or_404(MovieCategory, id)
     db.session.delete(cur_category)
     db.session.commit()

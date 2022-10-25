@@ -43,7 +43,13 @@
         <tr>
             <th scope="row" class="col-md-1">{{ d.id }}</th>
             <td>{{ d.name }}</td>
-            <td>{{ d.amount }}</td>
+            <td>
+                {% if d.type.value == "Nominal" %}
+                Rp {{ d.amount }}
+                {% else %}
+                {{ d.amount }}%
+                {% endif %}
+            </td>
             <td>{{ d.type.value }}</td>
             <td class="col-md-2">
                 <a href="{{ url_for('charge_rule.show', id=d.id) }}" class="btn text-primary bg-transparent"><i
