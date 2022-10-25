@@ -1,5 +1,41 @@
 {% extends 'base.html' %}
 
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<style>
+    .dropdown.bootstrap-select.dropup {
+        width: 100% !important;
+    }
+
+    .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+
+    .btn.dropdown-toggle.btn-light.bs-placeholder,
+    .btn.dropdown-toggle.btn-light {
+        background-color: #fff;
+        border-color: #d1d3e2;
+    }
+
+    .btn.dropdown-toggle.disabled.btn-light {
+        background-color: #d1d3e2;
+        border-color: #d1d3e2;
+    }
+
+    .dropdown-toggle:focus,
+    .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+        outline: 0px transparent !important;
+    }
+
+    .bootstrap-select .dropdown-toggle:focus,
+    .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+        outline: none !important;
+    }
+</style>
+
+{% endblock %}
+
 {% block title %}
 {% if data %}
 Transaksi {{data.id}}
@@ -44,13 +80,16 @@ Transaksi Baru
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.member.label() }}
-                {{ form.member(class_="form-control", value=data.member, disabled=true if data else false) }}
+                {{ form.member(class_="form-control selectpicker live-search", value=data.member, disabled=true if data
+                else false)
+                }}
             </div>
         </div>
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.movie.label }}
-                {{ form.movie(class_="form-control", value=data.movie, disabled=true if data else false) }}
+                {{ form.movie(class_="form-control selectpicker live-search", value=data.movie,
+                disabled=true if data else false) }}
             </div>
         </div>
         <div class="form-row my-2">
@@ -72,13 +111,14 @@ Transaksi Baru
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.charge.label }}
-                {{ form.charge(class_="form-control", value=data.charge, disabled=true if data else false) }}
+                {{ form.charge(class_="form-control selectpicker", value=data.charge, disabled=true if data else false)
+                }}
             </div>
         </div>
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.staff.label }}
-                {{ form.staff(class_="form-control", value=data.staff, disabled=true if data else false) }}
+                {{ form.staff(class_="form-control selectpicker", value=data.staff, disabled=true if data else false) }}
             </div>
         </div>
 
@@ -112,7 +152,14 @@ Transaksi Baru
 
 {% block script %}
 {{ super() }}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
+
 <script>
+
+    $('select.selectpicker.live-search').attr('data-live-search', 'true')
+
     $('form').submit(function (e) {
         $(':disabled').each(function (e) {
             $(this).removeAttr('disabled');
