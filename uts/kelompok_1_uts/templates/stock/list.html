@@ -45,8 +45,8 @@
             <td class="col-md-2">
                 <a href="{{url_for('stock.show', id=d.id)}}" type="button" class="btn text-primary bg-transparent"><i
                         class="fas fa-fw fa-pen"></i></a>
-                <button class="btn text-danger bg-transparent"><i class="fas fa-fw fa-trash" data-id="{{ d.id }}"
-                        data-toggle="modal" data-target="#deleteModal"></i></button>
+                <button class="btn text-danger bg-transparent" data-id="{{ d.id }}" data-toggle="modal"
+                    data-target="#deleteModal"><i class="fas fa-fw fa-trash"></i></button>
             </td>
         </tr>
         {% endfor %}
