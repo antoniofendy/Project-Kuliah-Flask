@@ -14,6 +14,8 @@ from kelompok_1_uts import db
 
 from random import *
 
+from kelompok_1_uts.models.transaction import TransactionStatus
+
 bp = Blueprint("main", __name__)
 
 UPLOAD_FOLDER = "kelompok_1_uts/static/upload/staff"
@@ -50,7 +52,9 @@ def index():
             Transaction.rental_end_date < datetime.today(), Transaction.status == "RENT"
         )
         .count(),
-        "all_transaction": db.session.query(Transaction).all(),
+        "all_transaction": db.session.query(Transaction)
+        .filter(Transaction.status != TransactionStatus.RETURNED)
+        .all(),
     }
 
     print(type(dashboard_data["monthly_earning"]))
