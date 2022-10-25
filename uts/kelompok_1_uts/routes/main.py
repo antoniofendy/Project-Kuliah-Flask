@@ -28,22 +28,33 @@ def allowed_file(filename):
 @bp.route("/")
 def index():
     dashboard_data = {
-        "monthly_earning": db.session.query(Transaction).join(Payment).where(Transaction.id == Payment.transaction_id)
-            .with_entities(db.func.sum(Payment.amount))
-            .filter(extract('month', Transaction.rental_start_date) == datetime.today().month).first()[0],
-        "annual_earning" : db.session.query(Transaction).join(Payment).where(Transaction.id == Payment.transaction_id)
-            .with_entities(db.func.sum(Payment.amount))
-            .filter(extract('day', Transaction.rental_start_date) == datetime.today().day)
-            .first()[0],
-        "ongoing_transaction" : db.session.query(Transaction).filter(Transaction.status == 'RENT')
-            .count(),
-        "charged_transaction" : db.session.query(Transaction).filter(Transaction.rental_end_date < datetime.today(), Transaction.status == 'RENT')
-            .count(),
-        "all_transaction" : db.session.query(Transaction).all()
+        "monthly_earning": db.session.query(Transaction)
+        .join(Payment)
+        .where(Transaction.id == Payment.transaction_id)
+        .with_entities(db.func.sum(Payment.amount))
+        .filter(
+            extract("month", Transaction.rental_start_date) == datetime.today().month
+        )
+        .first()[0],
+        "annual_earning": db.session.query(Transaction)
+        .join(Payment)
+        .where(Transaction.id == Payment.transaction_id)
+        .with_entities(db.func.sum(Payment.amount))
+        .filter(extract("day", Transaction.rental_start_date) == datetime.today().day)
+        .first()[0],
+        "ongoing_transaction": db.session.query(Transaction)
+        .filter(Transaction.status == "RENT")
+        .count(),
+        "charged_transaction": db.session.query(Transaction)
+        .filter(
+            Transaction.rental_end_date < datetime.today(), Transaction.status == "RENT"
+        )
+        .count(),
+        "all_transaction": db.session.query(Transaction).all(),
     }
 
-    print(type(dashboard_data['monthly_earning']))
-    
+    print(type(dashboard_data["monthly_earning"]))
+
     return render_template("index.html", dashboard_data=dashboard_data)
 
 
