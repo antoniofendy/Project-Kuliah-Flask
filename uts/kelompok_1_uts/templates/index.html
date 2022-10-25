@@ -77,7 +77,13 @@
             </div>
             <div class="row no-gutters align-items-center">
               <div class="col-auto">
-                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{dashboard_data.ongoing_transaction}}</div>
+                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                  {% if dashboard_data.ongoing_transaction %}
+                  {{dashboard_data.ongoing_transaction}}
+                  {% else %}
+                  {{"-"}}
+                  {% endif %}
+                </div>
               </div>
             </div>
           </div>
@@ -97,7 +103,13 @@
           <div class="col mr-2">
             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
               Pengembalian terlambat</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">{{dashboard_data.charged_transaction}}</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">
+              {% if dashboard_data.charged_transaction %}
+              {{dashboard_data.charged_transaction}}
+              {% else %}
+              {{"-"}}
+              {% endif %}
+            </div>
           </div>
           <div class="col-auto">
             <i class="fas fa-clock fa-2x text-gray-300"></i>
