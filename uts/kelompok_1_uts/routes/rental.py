@@ -187,8 +187,3 @@ def pay():
     payment_controller.pay(payment)
 
     return redirect(url_for("rental.show_transaction"))
-
-
-@bp.route("payment/delete/<int:id>", methods=["POST"])
-def delete_payment(id):
-    return ""
