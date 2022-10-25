@@ -17,6 +17,7 @@ def update(movie):
     cur_movie.duration = movie["duration"]
     cur_movie.actor = movie["actor"]
     cur_movie.picture = movie["picture"]
+    cur_movie.movie_category_id = movie["movie_category_id"]
 
     db.session.commit()
 

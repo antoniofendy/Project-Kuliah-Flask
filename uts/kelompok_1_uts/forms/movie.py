@@ -16,6 +16,6 @@ class MovieForm(FlaskForm):
     synopsis = TextAreaField("Sinopsis", validators=[DataRequired()])
     picture = FileField("Poster Film")
     category = SelectField("Kategori")
-    duration = StringField("Durasi", validators=[DataRequired()])
+    duration = IntegerField("Durasi (menit)", validators=[DataRequired()])
     actor = StringField("Aktor/Aktris", validators=[DataRequired()])
     submit = SubmitField("Simpan")

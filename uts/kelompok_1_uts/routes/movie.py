@@ -26,10 +26,18 @@ def index(id):
         form = MovieForm()
         data = movie_controller.get(id)
 
+        movie_category = db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+        form.category.choices = [(c.id, c.category_name) for c in movie_category]
+
+        for c in movie_category:
+            if c.id == data.movie_category_id:
+                form.category.default = c.id
+
+        form.process()
+
         return render_template("movie/form.html", form=form, data=data)
 
     data = movie_controller.get_all()
-    print(data)
 
     return render_template("movie/list.html", data=data)
 
@@ -50,7 +58,6 @@ def create():
                     "{fname}{fext}".format(fname=request.form.get("title"), fext=file_ext),
                 )
             )
-
 
         movie_controller.create(
             Movie(
@@ -75,16 +82,51 @@ def create():
 
 @bp.route("/update/<int:id>", methods=["POST"])
 def update(id):
-    movie_controller.update(
-        {
-            "id": int(id),
-            "title": request.form.get("title"),
-            "synopsis": request.form.get("synopsis"),
-            "duration": request.form.get("duration"),
-            "actor": request.form.get("actor"),
-            "picture": request.form.get("picture"),
-        }
-    )
+
+    old_data = movie_controller.get(id)
+
+    file = request.files["picture"]
+
+    if file.filename != "":
+        file_ext = None
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1]
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fname}{fext}".format(
+                        fname=old_data.title, fext=file_ext
+                    ),
+                )
+            )
+
+        movie_controller.update(
+            {
+                "id": int(id),
+                "title": request.form.get("title"),
+                "synopsis": request.form.get("synopsis"),
+                "duration": request.form.get("duration"),
+                "actor": request.form.get("actor"),
+                "picture": "{fname}{fext}".format(
+                            fname=old_data.title, fext=file_ext
+                        ),
+                "movie_category_id": request.form.get("category"),
+            }
+        )
+    else:
+        movie_controller.update(
+            {
+                "id": int(id),
+                "title": request.form.get("title"),
+                "synopsis": request.form.get("synopsis"),
+                "duration": request.form.get("duration"),
+                "actor": request.form.get("actor"),
+                "picture": old_data.picture,
+                "movie_category_id": request.form.get("category"),
+            }
+        )
 
     flash("Data film berhasil diubah.", category="primary")
     return redirect(url_for("movie.index"))
