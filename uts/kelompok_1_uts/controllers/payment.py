@@ -1,3 +1,4 @@
+from flask import flash
 from kelompok_1_uts import db
 
 
@@ -62,3 +63,40 @@ def pay(payment):
 def get_all():
     response = Payment.query.order_by(Payment.id).all()
     return response
+
+
+def delete(id):
+    payment = db.session.get(Payment, id)
+
+    if payment.transaction.status == TransactionStatus.RETURNED:
+
+        if payment.transaction_type == PaymentType.PAYMENT:
+            other_payment = (
+                Payment.query.filter(Payment.transaction_id == payment.transaction_id)
+                .filter(Payment.transaction_type == PaymentType.CHARGE)
+                .first()
+            )
+            if other_payment:
+                flash(
+                    f"Data pembayaran {payment.id} tidak dapat dihapus karena terkait dengan pembayaran {other_payment.id}.",
+                    category="danger",
+                )
+                return False
+
+        payment.transaction.status = TransactionStatus.RENT
+        payment.transaction.stock.qty = payment.transaction.stock.qty - 1
+        flash(
+            f"Data pembayaran berhasil dihapus dan pengembalian transaksi {payment.transaction.id} dibatalkan.",
+            category="info",
+        )
+    elif payment.transaction.status == TransactionStatus.RENT:
+        payment.transaction.status = TransactionStatus.UNPAID
+        payment.transaction.stock.qty = payment.transaction.stock.qty + 1
+        flash(
+            f"Data pembayaran berhasil dihapus dan penyewaan transaksi {payment.transaction.id} dibatalkan.",
+            category="info",
+        )
+    db.session.delete(payment)
+    db.session.commit()
+
+    return True

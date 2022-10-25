@@ -159,10 +159,8 @@ def show_payment(id, charge):
         data = payment_controller.get(id, charge)
 
         form.type.default = data.transaction_type.name
-        print(data.transaction_type)
         form.process()
 
-        print(data.transaction_type)
         form.process()
 
         return render_template("rental/payment.html", form=form, data=data)
@@ -174,9 +172,6 @@ def show_payment(id, charge):
 
 @bp.route("payment/pay", methods=["POST"])
 def pay():
-    print(request.form.get("transaction_id"))
-    print(request.form.get("type"))
-    print(request.form.get("amount"))
     payment = Payment(
         transaction_id=request.form.get("transaction_id"),
         transaction_type=request.form.get("type"),
@@ -187,3 +182,14 @@ def pay():
     payment_controller.pay(payment)
 
     return redirect(url_for("rental.show_transaction"))
+
+
+@bp.route("payment/delete", methods=["POST"])
+def delete_payment():
+    deleted = payment_controller.delete(request.form.get("id"))
+
+    if not deleted:
+
+        return redirect(url_for("rental.show_payment"))
+
+    return redirect(url_for("rental.show_payment"))
