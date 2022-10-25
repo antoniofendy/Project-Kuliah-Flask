@@ -44,8 +44,8 @@
         <tr>
             <th scope="row" class="col-md-1">{{ d.id }}</th>
             <td>{{ d.title }}</td>
-            <td>{{ d.category }}</td>
-            <td>{{ d.duration }}</td>
+            <td>{{ d.movie_category.category_name }}</td>
+            <td>{{ d.duration }} menit</td>
             <td>{{ d.actor }}</td>
             <td class="col-md-2">
                 <a href="{{url_for('movie.index', id=d.id)}}" type="button" class="btn text-primary bg-transparent"><i

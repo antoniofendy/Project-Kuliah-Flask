@@ -1,5 +1,33 @@
 {% extends 'base.html' %}
 
+{% block css %}
+<style>
+    .profile-object {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-img {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .profile-img__img {
+        border-radius: 10px;
+    }
+
+    .profile-img__img--large {
+        width: 200px;
+        height: auto;
+    }
+
+    .profile-metadata--horizontal {
+        margin-left: 22px;
+    }
+</style>
+{% endblock %}
+
 {% block title %}
 {% if data %}
 {{data.name}}
@@ -13,9 +41,20 @@ Tambah Film
 
     <div class="h3 mb-2 text-gray-800">
         {% if data %}
-        {{data.name}}
+        <div class="row d-flex flex-column flex-md-row mx-auto align-items-start text-md-start">
+            <div class="profile-object">
+                <div class="profile-img">
+                    <img class="profile-img__img profile-img__img--large"
+                        src="{{ url_for('static', filename='upload/movie/'+data.picture) }}">
+                </div>
+
+                <div class="profile-metadata profile-metadata--horizontal">
+                    <h3 class="profile-metadata__title profile-metadata__title--large mb-2">{{data.title}}</h3>
+                </div>
+            </div>
+        </div>
         {% else %}
-        Tambah Film
+        Staf Baru
         {% endif %}
     </div>
 
@@ -25,7 +64,7 @@ Tambah Film
                     {% else %}
                     {{url_for('movie.create')}}
                     {% endif %}
-    " method="post">
+    " method="post" enctype="multipart/form-data">
         {% if data %}
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">

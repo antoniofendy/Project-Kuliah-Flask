@@ -1,6 +1,7 @@
 from flask import flash, redirect, url_for
 from kelompok_1_uts import db
 from kelompok_1_uts.models.movie import Movie
+from kelompok_1_uts.models.movie_category import MovieCategory
 from kelompok_1_uts.models.stock import Stock
 
 
@@ -42,5 +43,5 @@ def get(id):
 
 def get_all():
     # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
-    response = Movie.query.order_by(Movie.id.asc()).all()
+    response = db.session.query(Movie).join(MovieCategory).where(Movie.movie_category_id == MovieCategory.id).all()
     return response

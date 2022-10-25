@@ -1,5 +1,33 @@
 {% extends 'base.html' %}
 
+{% block css %}
+<style>
+    .profile-object {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-img {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .profile-img__img--large {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-img__img {
+        border-radius: 50%;
+    }
+
+    .profile-metadata--horizontal {
+        margin-left: 22px;
+    }
+</style>
+{% endblock %}
+
 {% block title %}
 {% if data %}
 {{data.name}}
@@ -13,7 +41,18 @@ Staf Baru
 
     <div class="h3 mb-2 text-gray-800">
         {% if data %}
-        {{data.name}}
+        <div class="row d-flex flex-column flex-md-row mx-auto align-items-center text-md-start">
+            <div class="profile-object">
+                <div class="profile-img">
+                    <img class="profile-img__img profile-img__img--large"
+                        src="{{ url_for('static', filename='upload/staff/'+data.picture) }}">
+                </div>
+
+                <div class="profile-metadata profile-metadata--horizontal">
+                    <h3 class="profile-metadata__title profile-metadata__title--large mb-2">{{data.name}}</h3>
+                </div>
+            </div>
+        </div>
         {% else %}
         Staf Baru
         {% endif %}
@@ -55,7 +94,8 @@ Staf Baru
         <div class="form-row my-2">
             <div class="col-12 col-xl-6 m-md-0">
                 {{ form.address.label }}
-                {{ form.address(class_="form-control", value=data.address) }}
+                <textarea required min="10" max="data.address" class="form-control" id="body" name="address"
+                    style="min-height: 80px">{{data.address}}</textarea>
             </div>
         </div>
         <div class="form-row my-3">

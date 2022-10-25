@@ -1,11 +1,23 @@
+import os
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+
+from werkzeug.utils import secure_filename
 
 from kelompok_1_uts.forms.movie import MovieForm
 from kelompok_1_uts.models.movie import Movie
+from kelompok_1_uts.models.movie_category import MovieCategory
 from kelompok_1_uts.controllers import movie as movie_controller
+
+from kelompok_1_uts import db
 
 bp = Blueprint("movie", __name__, template_folder="templates", static_folder="static")
 
+UPLOAD_FOLDER = "kelompok_1_uts/static/upload/movie"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @bp.route("/", defaults={"id": None})
 @bp.route("/<int:id>")
@@ -17,6 +29,7 @@ def index(id):
         return render_template("movie/form.html", form=form, data=data)
 
     data = movie_controller.get_all()
+    print(data)
 
     return render_template("movie/list.html", data=data)
 
@@ -25,18 +38,37 @@ def index(id):
 def create():
     form = MovieForm()
     if request.method == "POST":
+
+        file_ext = None
+        file = request.files["picture"]
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1]
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fname}{fext}".format(fname=request.form.get("title"), fext=file_ext),
+                )
+            )
+
+
         movie_controller.create(
             Movie(
                 title=request.form.get("title"),
                 synopsis=request.form.get("synopsis"),
-                picture=request.form.get("picture"),
+                picture="{fname}{fext}".format(fname=request.form.get("title"), fext=file_ext),
                 duration=request.form.get("duration"),
                 actor=request.form.get("actor"),
+                movie_category_id=request.form.get("category"),
             )
         )
 
         flash("Data film berhasil ditambahkan.", category="success")
         return redirect(url_for("movie.index"))
+
+    movie_category = db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+
+    form.category.choices = [(c.id, c.category_name) for c in movie_category]
 
     return render_template("movie/form.html", form=form, data=None)
 
