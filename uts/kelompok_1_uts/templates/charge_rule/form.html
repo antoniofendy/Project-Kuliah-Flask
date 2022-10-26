@@ -76,7 +76,8 @@ Aturan Denda Baru
 
 {% if data.id == null %}
 <script>
-    $('select option[value=placeholder]').attr("disabled", true)
+    $('select option[value=""]').attr("disabled", true)
+
 </script>
 {% endif %}
 
