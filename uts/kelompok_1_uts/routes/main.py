@@ -62,11 +62,6 @@ def index():
     return render_template("index.html", dashboard_data=dashboard_data)
 
 
-@bp.route("/settings")
-def settings_list():
-    return "<h1>Pengaturan</h1>"
-
-
 @bp.route("/staff", defaults={"id": None})
 @bp.route("/staff/<int:id>")
 def show_staff(id):
@@ -97,7 +92,8 @@ def new_staff():
             file.save(
                 os.path.join(
                     UPLOAD_FOLDER,
-                    "{fname}{fext}".format(fname=unique_pic_name, fext=file_ext),
+                    "{fname}{fext}".format(
+                        fname=unique_pic_name, fext=file_ext),
                 )
             )
 
@@ -108,7 +104,8 @@ def new_staff():
                 password=request.form.get("password"),
                 phone=request.form.get("phone"),
                 address=request.form.get("address"),
-                picture="{fname}{fext}".format(fname=unique_pic_name, fext=file_ext),
+                picture="{fname}{fext}".format(
+                    fname=unique_pic_name, fext=file_ext),
             )
         )
 
