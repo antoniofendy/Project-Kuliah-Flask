@@ -188,7 +188,7 @@
     console.log(total_value)
 
     if (total_value === 'None') {
-      $(this).text("-")
+      $(this).text(new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format("0"))
     }
     else {
       $(this).text(new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(total_value))
