@@ -147,11 +147,6 @@ def update(id):
     return redirect(url_for("movie.index"))
 
 
-@bp.route("/show")
-def show():
-    return "<h1>Detail</h1>"
-
-
 @bp.route("/delete", methods=["POST"])
 def delete():
     old_data = movie_controller.get(request.form.get("id"))
