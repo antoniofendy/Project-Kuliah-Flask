@@ -11,7 +11,8 @@ from kelompok_1_uts.controllers import movie as movie_controller
 
 from kelompok_1_uts import db
 
-bp = Blueprint("movie", __name__, template_folder="templates", static_folder="static")
+bp = Blueprint("movie", __name__, template_folder="templates",
+               static_folder="static")
 
 UPLOAD_FOLDER = "kelompok_1_uts/static/upload/movie"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -29,9 +30,11 @@ def index(id):
         data = movie_controller.get(id)
 
         movie_category = (
-            db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+            db.session.query(MovieCategory).order_by(
+                MovieCategory.category_name).all()
         )
-        form.category.choices = [(c.id, c.category_name) for c in movie_category]
+        form.category.choices = [(c.id, c.category_name)
+                                 for c in movie_category]
 
         for c in movie_category:
             if c.id == data.movie_category_id:
@@ -79,11 +82,16 @@ def create():
         )
 
         flash("Data film berhasil ditambahkan.", category="success")
-        return redirect(url_for("movie.index"))
+        return redirect(url_for("movie.movie"))
 
     movie_category = (
-        db.session.query(MovieCategory).order_by(MovieCategory.category_name).all()
+        db.session.query(MovieCategory).order_by(
+            MovieCategory.category_name).all()
     )
+
+    if not movie_category:
+        flash("Tidak ada data kategori film.", category="info")
+        return redirect(url_for("movie.idnex", id=None))
 
     form.category.choices = [(c.id, c.category_name) for c in movie_category]
 
@@ -106,7 +114,8 @@ def update(id):
             file.save(
                 os.path.join(
                     UPLOAD_FOLDER,
-                    "{fname}{fext}".format(fname=old_data.title, fext=file_ext),
+                    "{fname}{fext}".format(
+                        fname=old_data.title, fext=file_ext),
                 )
             )
 
