@@ -12,7 +12,7 @@ from kelompok_1_uts.models.transaction import TransactionStatus
 
 def create(transaction):
     if transaction.rental_end_date <= transaction.rental_start_date:
-        return "Tanggal Sewa tidak bisa lebih awal dari atau sama dengan Tanggal Akhir Sewa."
+        return "Tanggal Akhir Sewa tidak bisa lebih awal atau sama dengan Tanggal Sewa"
 
     db.session.add(transaction)
 

@@ -82,7 +82,7 @@ def create():
         )
 
         flash("Data film berhasil ditambahkan.", category="success")
-        return redirect(url_for("movie.movie"))
+        return redirect(url_for("movie.index"))
 
     movie_category = (
         db.session.query(MovieCategory).order_by(
@@ -91,7 +91,7 @@ def create():
 
     if not movie_category:
         flash("Tidak ada data kategori film.", category="info")
-        return redirect(url_for("movie.idnex", id=None))
+        return redirect(url_for("movie.index", id=None))
 
     form.category.choices = [(c.id, c.category_name) for c in movie_category]
 
