@@ -1,0 +1,176 @@
+{% extends 'admin/base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+<style>
+    .car-object {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .car-img {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .car-img__img {
+        border-radius: 10px;
+    }
+
+    .car-img__img--large {
+        width: 200px;
+        height: auto;
+    }
+
+    .car-metadata--horizontal {
+        margin-left: 22px;
+    }
+
+    .dropdown.bootstrap-select.dropup {
+        width: 100% !important;
+    }
+
+    .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 100% !important;
+    }
+
+    .btn.dropdown-toggle.btn-light.bs-placeholder,
+    .btn.dropdown-toggle.btn-light {
+        background-color: #fff;
+        border-color: #d1d3e2;
+    }
+
+    .btn.dropdown-toggle.disabled.btn-light {
+        background-color: #d1d3e2;
+        border-color: #d1d3e2;
+    }
+
+    .dropdown-toggle:focus,
+    .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+        outline: 0px transparent !important;
+    }
+
+    .bootstrap-select .dropdown-toggle:focus,
+    .bootstrap-select>select.mobile-device:focus+.dropdown-toggle {
+        outline: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+{% if data %}
+{{data.name}}
+{% else %}
+Mobil Baru
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        <div class="row d-flex flex-column flex-md-row mx-auto align-items-start text-md-start">
+            <div class="car-object">
+                <div class="car-img">
+                    <img class="car-img__img car-img__img--large"
+                        src="{{ url_for('static', filename='upload/car/'+data.picture) }}">
+                </div>
+
+                <div class="car-metadata car-metadata--horizontal">
+                    <h3 class="car-metadata__title car-metadata__title--large mb-2">{{data.title}}</h3>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        Mobil Baru
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('admin_md_car.update')}}
+                    {% else %}
+                    {{url_for('admin_md_car.create')}}
+                    {% endif %}
+    " method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.model.label() }}
+                {{ form.model(class_="form-control", value=data.model) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.type.label() }}
+                {{ form.type(class_="form-control")}}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.brand.label() }}
+                {{ form.brand(class_="form-control", value=data.brand) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.picture.label() }}
+                {{ form.picture(class_="form-control-file", value=data.picture) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.transmission.label() }}
+                {{ form.transmission(class_="form-control selectpicker", value=data.transmission, title="Pilih jenis
+                transmisi") }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.seats.label() }}
+                {{ form.seats(class_="form-control", value=data.seats) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.luggage.label() }}
+                {{ form.luggage(class_="form-control", value=data.luggage) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.fuel.label() }}
+                {{ form.fuel(class_="form-control selectpicker", value=data.fuel, title="Pilih jenis bahan bakar") }}
+            </div>
+        </div>
+
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
+{% endblock %}

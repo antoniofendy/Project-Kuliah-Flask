@@ -3,7 +3,6 @@ from kelompok_1_uas.admin.models.garage import Garage
 
 
 def get_all():
-    # response = db.session.execute(db.select(Staff).order_by(Staff.name)).scalars().all()
     response = Garage.query.order_by(Garage.id.asc()).all()
     return response
 
