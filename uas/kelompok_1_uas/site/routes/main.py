@@ -1,14 +1,13 @@
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, render_template
 
-bp = Blueprint(
-    "user_main",
+site_main_bp = Blueprint(
+    "site_main",
     __name__,
-    template_folder="../templates",
-    static_folder="../static",
+    template_folder="templates",
+    static_folder="static",
 )
 
 
-@bp.route("/index")
-@bp.route("/")
+@site_main_bp.route("/")
 def index():
-    return render_template("site/main.html")
+    return render_template("site/index.html")

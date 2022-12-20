@@ -1,15 +1,15 @@
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, render_template
 
-bp = Blueprint(
+admin_main_bp = Blueprint(
     "admin_main",
     __name__,
     url_prefix="/admin",
-    template_folder="templates",
+    template_folder="../templates",
     static_folder="../static",
 )
 
 
-@bp.route("/index")
-@bp.route("/")
+@admin_main_bp.route("/")
 def index():
+    print(admin_main_bp.root_path)
     return render_template("admin/index.html")

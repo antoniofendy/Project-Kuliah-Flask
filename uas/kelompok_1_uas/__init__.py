@@ -16,16 +16,22 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from kelompok_1_uas.admin.routes.main import bp as admin_main_bp
-    from kelompok_1_uas.admin.routes.charge_rule import bp as admin_charge_rule
-    from kelompok_1_uas.admin.errors import bp as admin_error_bp
+    from kelompok_1_uas.admin import routes as admin_routes
+    from kelompok_1_uas.site import routes as site_routes
 
-    from kelompok_1_uas.site.routes.main import bp as user_main_bp
+    app.register_blueprint(admin_routes.main.admin_main_bp)
+    app.register_blueprint(site_routes.main.site_main_bp)
 
-    app.register_blueprint(admin_main_bp)
-    app.register_blueprint(admin_charge_rule)
-    app.register_blueprint(admin_error_bp)
+    # from kelompok_1_uas.admin.routes.main import bp as admin_main_bp
+    # from kelompok_1_uas.admin.routes.charge_rule import bp as admin_charge_rule
+    # from kelompok_1_uas.admin.errors import bp as admin_error_bp
 
-    app.register_blueprint(user_main_bp)
+    # from kelompok_1_uas.site.routes.main import bp as user_main_bp
+
+    # app.register_blueprint(admin_main_bp)
+    # app.register_blueprint(admin_charge_rule)
+    # app.register_blueprint(admin_error_bp)
+
+    # app.register_blueprint(user_main_bp)
 
     return app
