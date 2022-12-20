@@ -19,8 +19,8 @@ def create(Garage):
 
 def update(garage):
     cur_garage = db.get_or_404(Garage, garage["id"])
-    cur_garage.amount = garage["name"]
-    cur_garage.amount = garage["address"]
+    cur_garage.name = garage["name"]
+    cur_garage.address = garage["address"]
 
     db.session.commit()
 

@@ -19,6 +19,8 @@ def read(id):
     if id:
         form = GarageForm()
         data = garage_controller.get(id)
+        form.address.data = data.address
+        form.address()
 
         return render_template("admin/master-data/garage/form.html", form=form, data=data)
 
@@ -33,13 +35,12 @@ def create():
         garage_controller.create(
             Garage(
                 name=request.form.get("name"),
-                amount=request.form.get("amount"),
-                type=request.form.get("type"),
+                address=request.form.get("address"),
             )
         )
 
-        flash("Aturan denda baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("admin_garage.read"))
+        flash("Garasi baru berhasil ditambahkan.", category="success")
+        return redirect(url_for("admin_md_garage.read"))
 
     return render_template(
         "admin/master-data/garage/form.html", form=GarageForm(), data=None
@@ -51,14 +52,13 @@ def update():
     data = {
         "id": request.form.get("id"),
         "name": request.form.get("name"),
-        "amount": request.form.get("amount"),
-        "type": request.form.get("type"),
+        "address": request.form.get("address"),
     }
 
     garage_controller.update(data)
 
-    flash("Aturan denda berhasil diubah.", category="primary")
-    return redirect(url_for("admin_garage.read"))
+    flash("Garasi berhasil diubah.", category="primary")
+    return redirect(url_for("admin_md_garage.read"))
 
 
 @admin_md_garage_bp.route("/delete", methods=["POST"])
@@ -67,5 +67,5 @@ def delete():
 
     garage_controller.delete(id_)
 
-    flash("Aturan denda berhasil dihapus.", category="info")
-    return redirect(url_for("admin_garage.read"))
+    flash("Garasi berhasil dihapus.", category="info")
+    return redirect(url_for("admin_md_garage.read"))

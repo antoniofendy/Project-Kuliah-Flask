@@ -4,7 +4,7 @@
 {% if data %}
 {{data.name}}
 {% else %}
-Aturan Denda Baru
+Garasi Baru
 {% endif %}
 {% endblock %}
 
@@ -15,15 +15,15 @@ Aturan Denda Baru
         {% if data %}
         {{data.name}}
         {% else %}
-        Aturan Denda Baru
+        Garasi Baru
         {% endif %}
     </div>
 
     {% if form %}
     <form action="{% if data%}
-                    {{url_for('admin_charge_rule.update')}}
+                    {{url_for('admin_md_garage.update')}}
                     {% else %}
-                    {{url_for('admin_charge_rule.create')}}
+                    {{url_for('admin_md_garage.create')}}
                     {% endif %}
     " method="post">
         {% if data %}
@@ -44,25 +44,10 @@ Aturan Denda Baru
 
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.amount.label() }}
-                {{ form.amount(class_="form-control", value=data.amount) }}
+                {{ form.address.label() }}
+                {{ form.address(class_="form-control")}}
             </div>
         </div>
-        {% if data.id %}
-        <div class="form-row my-2">
-            <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.type.label() }}
-                {{ form.type(class_="form-control", value=data.type.name) }}
-            </div>
-        </div>
-        {% else %}
-        <div class="form-row my-2">
-            <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.type.label() }}
-                {{ form.type(class_="form-control") }}
-            </div>
-        </div>
-        {% endif %}
 
 
         {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
@@ -73,12 +58,5 @@ Aturan Denda Baru
 {% endblock %}
 
 {% block script %}
-
-{% if data.id == null %}
-<script>
-    $('select option[value=""]').attr("disabled", true)
-
-</script>
-{% endif %}
 
 {% endblock %}
