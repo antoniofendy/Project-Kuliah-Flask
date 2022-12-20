@@ -20,6 +20,7 @@ def create_app():
     from kelompok_1_uas.site import routes as site_routes
 
     app.register_blueprint(admin_routes.main.admin_main_bp)
+    app.register_blueprint(admin_routes.charge_rule.admin_charge_rule_bp)
     app.register_blueprint(site_routes.main.site_main_bp)
 
     # from kelompok_1_uas.admin.routes.main import bp as admin_main_bp

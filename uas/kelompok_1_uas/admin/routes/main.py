@@ -11,5 +11,4 @@ admin_main_bp = Blueprint(
 
 @admin_main_bp.route("/")
 def index():
-    print(admin_main_bp.root_path)
     return render_template("admin/index.html")
