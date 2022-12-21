@@ -199,8 +199,7 @@
           <form style="margin-top: 1.5rem" action="" method="post">
             <div style="margin-bottom: 1.75rem">
               <label for="" class="d-block input-label">Email Address</label>
-                {{ form.emailUser.label() }}
-                {{ form.emailUser(class_="form-control input-field border-0") }}
+                
               <div class="d-flex w-100 div-input">
                 <svg class="icon" style="margin-right: 1rem" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   xmlns="http://www.w3.org/2000/svg">
@@ -209,7 +208,7 @@
                     fill="#CACBCE" />
                 </svg>
                 <input class="input-field border-0" type="email" name="" id="" placeholder="Your Email Address"
-                  autocomplete="on" required />
+                  autocomplete="on" value="{{ request.form['emailUser'] }}" required />
               </div>
             </div>
             <div style="margin-top: 1rem">
@@ -222,9 +221,7 @@
                     fill="#CACBCE" />
                 </svg>
                 <input class="input-field border-0" type="password" name="" id="password-content-4-1"
-                  placeholder="Your Password" minlength="6" value="{}" required />
-                    {{ form.passwordUser.label() }}
-                    {{ form.passwordUser(class_="form-control input-field border-0")}}
+                  placeholder="Your Password" minlength="6" value="{{ request.form['passwordUser'] }}" required />
                 <div onclick="togglePassword()">
                   <svg style="margin-left: 0.75rem; cursor: pointer" width="20" height="14" viewBox="0 0 20 14"
                     fill="none" xmlns="http://www.w3.org/2000/svg">
