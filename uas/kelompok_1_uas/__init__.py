@@ -32,7 +32,7 @@ def create_app():
     app.register_blueprint(admin_routes.md_stock.admin_md_stock_bp)
     
     # User side blueprint registers
-    app.register_blueprint(user_routes.user.user_user_bp)
+    app.register_blueprint(user_routes.user_user_bp)
 
     # Site side blueprint registers
     app.register_blueprint(site_routes.main.site_main_bp)

@@ -55,7 +55,7 @@ def update():
         "occupationUser": request.form.get("occupationUser"),
         "emailUser": request.form.get("emailUser"),
         "addressUser": request.form.get("addressUser"),
-        "passwordUser": request.form.get("passwordUs"),
+        "passwordUser": request.form.get("passwordUser"),
     }
 
     user_controller.update(data)
