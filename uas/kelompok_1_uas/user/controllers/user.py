@@ -1,5 +1,5 @@
 from kelompok_1_uas import db
-from kelompok_1_uas.admin.models.user import User
+from kelompok_1_uas.user.models.user import User
 
 
 def get_all():

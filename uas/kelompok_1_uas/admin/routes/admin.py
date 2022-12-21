@@ -49,7 +49,7 @@ def update():
         "id": request.form.get("id"),
         "name": request.form.get("name"),
         "phone": request.form.get("phone"),
-        "addreses": request.form.get("address"),
+        "address": request.form.get("address"),
         "password": request.form.get("password"),
     }
 

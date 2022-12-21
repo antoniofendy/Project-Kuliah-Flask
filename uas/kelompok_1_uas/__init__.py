@@ -18,6 +18,7 @@ def create_app():
 
     # Admin side blueprints
     from kelompok_1_uas.admin import routes as admin_routes
+    from kelompok_1_uas.user import routes as user_routes
 
     # Site side blueprints
     from kelompok_1_uas.site import routes as site_routes
@@ -29,6 +30,9 @@ def create_app():
     app.register_blueprint(admin_routes.md_garage.admin_md_garage_bp)
     app.register_blueprint(admin_routes.md_car.admin_md_car_bp)
     app.register_blueprint(admin_routes.md_stock.admin_md_stock_bp)
+    
+    # User side blueprint registers
+    app.register_blueprint(user_routes.user.user_user_bp)
 
     # Site side blueprint registers
     app.register_blueprint(site_routes.main.site_main_bp)

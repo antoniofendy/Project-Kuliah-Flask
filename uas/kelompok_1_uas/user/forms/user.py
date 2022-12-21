@@ -1,6 +1,6 @@
 from flask import flash
 from flask_wtf import FlaskForm
-from kelompok_1_uas.models.user import GenderStat
+from kelompok_1_uas.user.models.user import GenderStat
 
 from wtforms import (
     StringField, 
