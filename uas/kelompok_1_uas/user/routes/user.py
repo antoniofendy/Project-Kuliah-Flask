@@ -28,14 +28,14 @@ def create():
     if request.method == "POST":
         user_controller.create(
             User(
-                name=request.form.get("name"),
-                phone=request.form.get("phone"),
-                address=request.form.get("address"),
-                date_of_birth=request.form.get("date_of_birth"),
-                sex=request.form.get("sex"),
-                occupation=request.form.get("occupation"),
-                email=request.form.get("email"),
-                password=request.form.get("password"),
+                name=request.form.get("nameUser"),
+                phone=request.form.get("phoneUser"),
+                address=request.form.get("addressUser"),
+                date_of_birth=request.form.get("date_of_birthUser"),
+                sex=request.form.get("sexUser"),
+                occupation=request.form.get("occupationUser"),
+                email=request.form.get("emailUser"),
+                password=request.form.get("passwordUser"),
             )
         )
 
@@ -48,21 +48,20 @@ def create():
 def update():
     data = {
         "id": request.form.get("id"),
-        "name": request.form.get("name"),
-        "phone": request.form.get("phone"),
-        "date_of_birth": request.form.get("date_of_birth"),
-        "sex": request.form.get("sex"),
-        "occupation": request.form.get("occupation"),
-        "email": request.form.get("email"),
-        "address": request.form.get("address"),
-        "password": request.form.get("password"),
+        "nameUser": request.form.get("nameUser"),
+        "phoneUser": request.form.get("phoneUser"),
+        "date_of_birthUser": request.form.get("date_of_birthUser"),
+        "sexUser": request.form.get("sexUser"),
+        "occupationUser": request.form.get("occupationUser"),
+        "emailUser": request.form.get("emailUser"),
+        "addressUser": request.form.get("addressUser"),
+        "passwordUser": request.form.get("passwordUs"),
     }
 
     user_controller.update(data)
 
     flash("Data user berhasil diubah.", category="primary")
     return redirect(url_for("user_user.read"))
-
 
 
 
