@@ -33,6 +33,7 @@ def create_app():
     
     # User side blueprint registers
     app.register_blueprint(user_routes.user.user_user_bp)
+    app.register_blueprint(user_routes.main.user_main_bp)
 
     # Site side blueprint registers
     app.register_blueprint(site_routes.main.site_main_bp)
