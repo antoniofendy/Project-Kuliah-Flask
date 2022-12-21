@@ -148,3 +148,10 @@ def form_api():
 
     return jsonify(garage_list = data)
 
+@admin_md_stock_bp.route("/get-available-garage", methods=["POST"])
+def get_available_garage():
+    car_id = request.form.get('car_id')
+    
+    
+    available_garage = db.session.query(Stock).filter_by(car_id=car_id).all()
+    return jsonify([{"id": s.garage.id, "name":s.garage.name} for s in available_garage])

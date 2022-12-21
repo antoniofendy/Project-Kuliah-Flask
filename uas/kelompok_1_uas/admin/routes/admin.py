@@ -37,7 +37,7 @@ def create():
             )
         )
 
-        flash("Data admin baru berhasil ditambahkan.", category="success")
+        flash("Admin baru berhasil ditambahkan.", category="success")
         return redirect(url_for("admin_admin.read"))
 
     return render_template("admin/admin/form.html", form=AdminForm(), data=None)
@@ -55,7 +55,7 @@ def update():
 
     admin_controller.update(data)
 
-    flash("Data admin berhasil diubah.", category="primary")
+    flash("Admin berhasil diubah.", category="primary")
     return redirect(url_for("admin_admin.read"))
 
 
@@ -65,5 +65,5 @@ def delete():
 
     admin_controller.delete(id_)
 
-    flash("Data admin berhasil dihapus.", category="info")
+    flash("Admin berhasil dihapus.", category="info")
     return redirect(url_for("admin_admin.read"))

@@ -28,9 +28,9 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="" aria-expanded="true">
+        <a class="nav-link" href="{{url_for('admin_reservation.create')}}" aria-expanded="true">
             <i class="fas fa-fw fa-compact-disc"></i>
-            <span>Transaksi Baru</span>
+            <span>Reservasi Baru</span>
         </a>
         <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -58,6 +58,7 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <!-- <h6 class="collapse-header">Transaksi:</h6> -->
+                <a class="collapse-item" href="{{url_for('admin_reservation.read')}}">Reservasi</a>
                 <a class="collapse-item" href="">Penyewaan</a>
                 <a class="collapse-item" href="">Pembayaran</a>
             </div>

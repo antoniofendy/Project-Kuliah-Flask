@@ -19,9 +19,9 @@ def create(Admin):
 
 def update(admin):
     cur_admin = db.get_or_404(Admin, admin["id"])
-    cur_admin.amount = admin["name"]
-    cur_admin.amount = admin["amount"]
-    cur_admin.type = admin["type"]
+    cur_admin.name = admin["name"]
+    cur_admin.phone = admin["phone"]
+    cur_admin.address = admin["address"]
 
     db.session.commit()
 

@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template
 
+from kelompok_1_uas.user.models.user import User
+
 site_main_bp = Blueprint(
     "site_main",
     __name__,
