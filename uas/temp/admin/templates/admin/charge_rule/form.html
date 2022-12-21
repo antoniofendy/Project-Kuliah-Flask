@@ -1,0 +1,84 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+{% if data %}
+{{data.name}}
+{% else %}
+Aturan Denda Baru
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="card card-body">
+
+    <div class="h3 mb-2 text-gray-800">
+        {% if data %}
+        {{data.name}}
+        {% else %}
+        Aturan Denda Baru
+        {% endif %}
+    </div>
+
+    {% if form %}
+    <form action="{% if data%}
+                    {{url_for('admin_charge_rule.update')}}
+                    {% else %}
+                    {{url_for('admin_charge_rule.create')}}
+                    {% endif %}
+    " method="post">
+        {% if data %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.id.label() }}
+                {{ form.id(class_="form-control", value=data.id) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.name.label() }}
+                {{ form.name(class_="form-control", value=data.name) }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.amount.label() }}
+                {{ form.amount(class_="form-control", value=data.amount) }}
+            </div>
+        </div>
+        {% if data.id %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.type.label() }}
+                {{ form.type(class_="form-control", value=data.type.name) }}
+            </div>
+        </div>
+        {% else %}
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.type.label() }}
+                {{ form.type(class_="form-control") }}
+            </div>
+        </div>
+        {% endif %}
+
+
+        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% if data.id == null %}
+<script>
+    $('select option[value=""]').attr("disabled", true)
+
+</script>
+{% endif %}
+
+{% endblock %}

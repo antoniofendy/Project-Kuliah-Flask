@@ -1,1 +1,1 @@
-from . import main, charge_rule
+from . import main, admin, charge_rule
