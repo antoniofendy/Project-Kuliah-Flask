@@ -16,15 +16,17 @@ def create(Stock):
     db.session.commit()
 
 
-def update(car):
-    cur_car = db.get_or_404(Stock, car["id"])
-    cur_car.name = car["name"]
-    cur_car.address = car["address"]
+def update(stock):
+    cur_stock = db.get_or_404(Stock, stock["id"])
+    cur_stock.car_id = stock["car_id"]
+    cur_stock.garage_id = stock["garage_id"]
+    cur_stock.price_per_day = stock["price_per_day"]
+    cur_stock.quantity = stock["quantity"]
 
     db.session.commit()
 
 
 def delete(id):
-    cur_car = db.get_or_404(Stock, id)
-    db.session.delete(cur_car)
+    cur_stock = db.get_or_404(Stock, id)
+    db.session.delete(cur_stock)
     db.session.commit()

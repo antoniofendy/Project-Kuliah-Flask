@@ -34,7 +34,7 @@ def index(id):
                 MovieCategory.category_name).all()
         )
         form.category.choices = [(c.id, c.category_name)
-                                 for c in movie_category]
+                                for c in movie_category]
 
         for c in movie_category:
             if c.id == data.movie_category_id:

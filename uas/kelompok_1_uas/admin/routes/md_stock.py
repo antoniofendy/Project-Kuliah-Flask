@@ -1,89 +1,107 @@
-import os
+from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
 
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from kelompok_1_uas import db
+from kelompok_1_uas.admin.models.car import Car
+from kelompok_1_uas.admin.models.garage import Garage
 
-from werkzeug.utils import secure_filename
-
-from kelompok_1_uas.admin.forms.car import CarForm
-from kelompok_1_uas.admin.controllers import car as car_controller
+from kelompok_1_uas.admin.forms.stock import StockForm
+from kelompok_1_uas.admin.controllers import stock as stock_controller
 from kelompok_1_uas.admin.models.stock import Stock
 
 admin_md_stock_bp = Blueprint(
     "admin_md_stock",
     __name__,
-    url_prefix="/admin/master-data/car",
+    url_prefix="/admin/master-data/stock",
     template_folder="../templates",
 )
-
-UPLOAD_FOLDER = "kelompok_1_uas/admin/static/upload/car"
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
-
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @admin_md_stock_bp.route("/", defaults={"id": None})
 @admin_md_stock_bp.route("/<int:id>")
 def read(id):
     if id:
-        form = CarForm()
-        data = car_controller.get(id)
-        form.transmission.default = data.transmission.name
-        form.fuel.default = data.fuel.name
+        form = StockForm()
+        data = stock_controller.get(id)
+
+        car = db.session.query(Car).all()
+
+        if not car:
+            flash("Tidak ada Mobil untuk dijadikan Stok.", category="info")
+            return redirect(url_for("admin_md_stock.read"))
+
+        car_list = [(c.id, "{cbrand} {cmodel} ({ctype})".format(cbrand=c.brand, cmodel=c.model, ctype=c.type)) for c in car]
+
+        form.car_id.choices = car_list
+
+        garage = db.session.query(Garage).all()
+
+        if not garage:
+            flash("Tidak ada garasi untuk dijadikan Stok.", category="info")
+            return redirect(url_for("admin_md_stock.read"))
+
+        garage_list = [(g.id, g.name) for g in garage]
+
+        stock = db.session.query(Stock).filter_by(car_id = data.car_id).all()
+
+        for s in stock:
+            for g in garage_list:
+                if g[0] == s.garage_id and g[0] != data.garage_id:
+                    garage_list.remove(g)
+
+        form.garage_id.choices = garage_list
+
+        form.car_id.default = data.car_id
+        form.garage_id.default = data.garage_id
 
         form.process()
 
-        return render_template("admin/master-data/car/form.html", form=form, data=data)
+        return render_template("admin/master-data/stock/form.html", form=form, data=data)
 
     return render_template(
-        "admin/master-data/car/list.html", data=car_controller.get_all()
+        "admin/master-data/stock/list.html", data=stock_controller.get_all()
     )
 
 
 @admin_md_stock_bp.route("/create", methods=["GET", "POST"])
 def create():
+    form=StockForm()
+
+    car = db.session.query(Car).all()
+
+    if not car:
+        flash("Tidak ada Mobil untuk dijadikan Stok.", category="info")
+        return redirect(url_for("admin_md_stock.read"))
+
+    car_list = [(c.id, "{cbrand} {cmodel} ({ctype})".format(cbrand=c.brand, cmodel=c.model, ctype=c.type)) for c in car]
+
+    form.car_id.choices = car_list
+
+    garage = db.session.query(Garage).all()
+
+    if not garage:
+        flash("Tidak ada garasi untuk dijadikan Stok.", category="info")
+        return redirect(url_for("admin_md_stock.read"))
+
+    garage_list = [(g.id, g.name) for g in garage]
+
+    form.garage_id.choices = garage_list
+
     if request.method == "POST":
 
-        file_ext = None
-        file = request.files["picture"]
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_ext = os.path.splitext(filename)[1]
-            file.save(
-                os.path.join(
-                    UPLOAD_FOLDER,
-                    "{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
-                        fmodel=request.form.get("model"),
-                        ftype=request.form.get("type"),
-                        fext=file_ext
-                    ),
-                )
-            )
-
-        car_controller.create(
+        stock_controller.create(
             Stock(
-                model=request.form.get("model"),
-                type=request.form.get("type"),
-                brand=request.form.get("brand"),
-                picture="{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
-                        fmodel=request.form.get("model"),
-                        ftype=request.form.get("type"),
-                        fext=file_ext
-                    ),
-                transmission=request.form.get("transmission"),
-                seats=request.form.get("seats"),
-                luggage=request.form.get("luggage"),
-                fuel=request.form.get("fuel"),
+                car_id=request.form.get("car_id"),
+                garage_id=request.form.get("garage_id"),
+                price_per_day=request.form.get("price_per_day"),
+                quantity=request.form.get("quantity"),
             )
         )
 
-        flash("Mobil baru berhasil ditambahkan.", category="success")
+        flash("Stok baru berhasil ditambahkan.", category="success")
         return redirect(url_for("admin_md_stock.read"))
 
     return render_template(
-        "admin/master-data/car/form.html", form=CarForm(), data=None
+        "admin/master-data/stock/form.html", form=form, data=None
     )
 
 
@@ -91,13 +109,15 @@ def create():
 def update():
     data = {
         "id": request.form.get("id"),
-        "name": request.form.get("name"),
-        "address": request.form.get("address"),
+        "car_id": request.form.get("car_id"),
+        "garage_id": request.form.get("garage_id"),
+        "price_per_day": request.form.get("price_per_day"),
+        "quantity": request.form.get("quantity"),
     }
 
-    car_controller.update(data)
+    stock_controller.update(data)
 
-    flash("Mobil berhasil diubah.", category="primary")
+    flash("Stok berhasil diubah.", category="primary")
     return redirect(url_for("admin_md_stock.read"))
 
 
@@ -105,7 +125,26 @@ def update():
 def delete():
     id_ = request.form.get("id")
 
-    car_controller.delete(id_)
+    stock_controller.delete(id_)
 
-    flash("Mobil berhasil dihapus.", category="info")
+    flash("Stok berhasil dihapus.", category="info")
     return redirect(url_for("admin_md_stock.read"))
+
+
+@admin_md_stock_bp.route("/form-api", methods=["POST"])
+def form_api():
+    req_car_id = request.form['car_id']
+    
+    garage = db.session.query(Garage).all()
+    stock = db.session.query(Stock).filter_by(car_id = req_car_id).all()
+    cols = ['id', 'name', 'address']
+    data = [{col: getattr(g, col) for col in cols} for g in garage]
+
+    print(stock)
+    for s in stock:
+        for d in data:
+            if d["id"] == s.garage_id:
+                data.remove(d)
+
+    return jsonify(garage_list = data)
+
