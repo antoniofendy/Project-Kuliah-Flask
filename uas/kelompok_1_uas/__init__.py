@@ -28,6 +28,7 @@ def create_app():
     app.register_blueprint(admin_routes.charge_rule.admin_charge_rule_bp)
     app.register_blueprint(admin_routes.md_garage.admin_md_garage_bp)
     app.register_blueprint(admin_routes.md_car.admin_md_car_bp)
+    app.register_blueprint(admin_routes.md_stock.admin_md_stock_bp)
 
     # Site side blueprint registers
     app.register_blueprint(site_routes.main.site_main_bp)
