@@ -1,5 +1,5 @@
 from kelompok_1_uas.user.models.user import User
-from kelompok_1_uas.user.forms import UserForm
+from kelompok_1_uas.user.forms.user import UserForm
 from kelompok_1_uas.user.controllers import user as user_controller
 
 from flask import Blueprint, render_template, request, flash, url_for, redirect
