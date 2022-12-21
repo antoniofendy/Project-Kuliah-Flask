@@ -40,7 +40,7 @@ def create():
         )
 
         flash("Data user baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("admin_admin.read"))
+        return redirect(url_for("user_user.read"))
 
     return render_template("user/user/form.html", form=UserForm(), data=None)
 
@@ -63,6 +63,10 @@ def update():
     flash("Data user berhasil diubah.", category="primary")
     return redirect(url_for("user_user.read"))
 
+
+@user_user_bp.route("/login", methods=["POST"])
+def login():
+    return render_template("../../site/loginUser.html", form=UserForm(), data=None)
 
 
 @user_user_bp.route("/delete", methods=["POST"])
