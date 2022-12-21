@@ -5,7 +5,6 @@ admin_main_bp = Blueprint(
     __name__,
     url_prefix="/admin",
     template_folder="../templates",
-    static_folder="../static",
 )
 
 

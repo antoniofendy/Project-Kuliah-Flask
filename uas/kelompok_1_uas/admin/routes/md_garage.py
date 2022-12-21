@@ -9,7 +9,6 @@ admin_md_garage_bp = Blueprint(
     __name__,
     url_prefix="/admin/master-data/garage",
     template_folder="../templates",
-    static_folder="../static",
 )
 
 

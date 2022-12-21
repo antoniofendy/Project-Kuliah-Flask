@@ -18,8 +18,14 @@ def create(Car):
 
 def update(car):
     cur_car = db.get_or_404(Car, car["id"])
-    cur_car.name = car["name"]
-    cur_car.address = car["address"]
+    cur_car.model = car["model"]
+    cur_car.type = car["type"]
+    cur_car.brand = car["brand"]
+    cur_car.picture = car["picture"]
+    cur_car.transmission = car["transmission"]
+    cur_car.seats = car["seats"]
+    cur_car.luggage = car["luggage"]
+    cur_car.fuel = car["fuel"]
 
     db.session.commit()
 

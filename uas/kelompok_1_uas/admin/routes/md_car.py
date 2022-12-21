@@ -13,7 +13,6 @@ admin_md_car_bp = Blueprint(
     __name__,
     url_prefix="/admin/master-data/car",
     template_folder="../templates",
-    static_folder="../static",
 )
 
 UPLOAD_FOLDER = "kelompok_1_uas/admin/static/upload/car"
@@ -90,13 +89,60 @@ def create():
 
 @admin_md_car_bp.route("/update", methods=["POST"])
 def update():
-    data = {
-        "id": request.form.get("id"),
-        "name": request.form.get("name"),
-        "address": request.form.get("address"),
-    }
+    old_data = car_controller.get(id)
 
-    car_controller.update(data)
+    file = request.files["picture"]
+
+    if file.filename != "":
+        file_ext = None
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1]
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fbrand}-{fmodel}-{ftype}{fext}".format(
+                        fbrand=request.form.get("brand"), 
+                        fmodel=request.form.get("model"),
+                        ftype=request.form.get("type"),
+                        fext=file_ext
+                    ),
+                )
+            )
+
+        car_controller.update(
+            {
+                "id": int(id),
+                "model": request.form.get("model"),
+                "type": request.form.get("type"),
+                "brand": request.form.get("brand"),
+                "picture": "{fbrand}-{fmodel}-{ftype}{fext}".format(
+                        fbrand=request.form.get("brand"), 
+                        fmodel=request.form.get("model"),
+                        ftype=request.form.get("type"),
+                        fext=file_ext
+                    ),
+                "transmission": request.form.get("transmission"),
+                "seats": request.form.get("seats"),
+                "luggage": request.form.get("luggage"),
+                "fuel": request.form.get("fuel"),
+            }
+        )
+    else:
+        car_controller.update(
+            {
+                "id": int(id),
+                "model": request.form.get("model"),
+                "type": request.form.get("type"),
+                "brand": request.form.get("brand"),
+                "picture": old_data.picture,
+                "transmission": request.form.get("transmission"),
+                "seats": request.form.get("seats"),
+                "luggage": request.form.get("luggage"),
+                "fuel": request.form.get("fuel"),
+            }
+        )
 
     flash("Mobil berhasil diubah.", category="primary")
     return redirect(url_for("admin_md_car.read"))

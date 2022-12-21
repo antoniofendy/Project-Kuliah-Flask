@@ -9,7 +9,7 @@ class CarForm(FlaskForm):
     model = StringField("Model", validators=[DataRequired(), Length(3, 255)])
     type = StringField("Tipe", validators=[DataRequired(), Length(3, 255)])
     brand = StringField("Brand", validators=[DataRequired(), Length(3, 255)])
-    picture = FileField("Gambar", validators=[DataRequired(), Length(3, 255)])
+    picture = FileField("Gambar", validators=[])
     transmission = SelectField(
         "Transmisi", 
         validators=[DataRequired()], 

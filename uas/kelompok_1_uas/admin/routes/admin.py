@@ -9,7 +9,6 @@ admin_admin_bp = Blueprint(
     __name__,
     url_prefix="/admin/admin",
     template_folder="../templates",
-    static_folder="../static",
 )
 
 

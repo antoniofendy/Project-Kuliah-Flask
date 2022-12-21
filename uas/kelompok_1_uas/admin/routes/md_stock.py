@@ -13,7 +13,6 @@ admin_md_stock_bp = Blueprint(
     __name__,
     url_prefix="/admin/master-data/car",
     template_folder="../templates",
-    static_folder="../static",
 )
 
 UPLOAD_FOLDER = "kelompok_1_uas/admin/static/upload/car"
