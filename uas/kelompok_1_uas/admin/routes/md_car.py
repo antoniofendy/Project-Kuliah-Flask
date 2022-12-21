@@ -15,7 +15,7 @@ admin_md_car_bp = Blueprint(
     template_folder="../templates",
 )
 
-UPLOAD_FOLDER = "kelompok_1_uas/admin/static/upload/car"
+UPLOAD_FOLDER = "kelompok_1_uas/static/upload/car"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 def allowed_file(filename):
@@ -89,7 +89,8 @@ def create():
 
 @admin_md_car_bp.route("/update", methods=["POST"])
 def update():
-    old_data = car_controller.get(id)
+
+    old_data = car_controller.get(request.form.get("id"))
 
     file = request.files["picture"]
 
@@ -113,7 +114,7 @@ def update():
 
         car_controller.update(
             {
-                "id": int(id),
+                "id": int(request.form.get("id")),
                 "model": request.form.get("model"),
                 "type": request.form.get("type"),
                 "brand": request.form.get("brand"),
@@ -132,7 +133,7 @@ def update():
     else:
         car_controller.update(
             {
-                "id": int(id),
+                "id": int(request.form.get("id")),
                 "model": request.form.get("model"),
                 "type": request.form.get("type"),
                 "brand": request.form.get("brand"),

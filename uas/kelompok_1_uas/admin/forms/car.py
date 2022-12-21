@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length, NumberRange
 
 
 class CarForm(FlaskForm):
-    id = IntegerField("ID Garasi", render_kw={"readonly": True})
+    id = IntegerField("ID Mobil", render_kw={"readonly": True})
     model = StringField("Model", validators=[DataRequired(), Length(3, 255)])
     type = StringField("Tipe", validators=[DataRequired(), Length(3, 255)])
     brand = StringField("Brand", validators=[DataRequired(), Length(3, 255)])
