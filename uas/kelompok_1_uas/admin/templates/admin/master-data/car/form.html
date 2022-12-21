@@ -76,7 +76,7 @@ Mobil Baru
             <div class="car-object">
                 <div class="car-img">
                     <img class="car-img__img car-img__img--large"
-                        src="{{ url_for('static', filename='upload/car/'+data.picture) }}">
+                        src="{{ url_for('.static', filename='upload/car/'+data.picture) }}">
                 </div>
 
                 <div class="car-metadata car-metadata--horizontal">
@@ -95,7 +95,7 @@ Mobil Baru
                     {% else %}
                     {{url_for('admin_md_car.create')}}
                     {% endif %}
-    " method="post">
+    " method="post" enctype="multipart/form-data">
         {% if data %}
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
@@ -107,22 +107,22 @@ Mobil Baru
 
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
+                {{ form.brand.label() }}
+                {{ form.brand(class_="form-control", value=data.brand, placeholder="Toyota, Mercedes, Hyundai, ...") }}
+            </div>
+        </div>
+
+        <div class="form-row my-2">
+            <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.model.label() }}
-                {{ form.model(class_="form-control", value=data.model) }}
+                {{ form.model(class_="form-control", value=data.model, placeholder="Avanza, Grand, Stargazer, ...") }}
             </div>
         </div>
 
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.type.label() }}
-                {{ form.type(class_="form-control")}}
-            </div>
-        </div>
-
-        <div class="form-row my-2">
-            <div class="col-12 col col-xl-6 m-md-0">
-                {{ form.brand.label() }}
-                {{ form.brand(class_="form-control", value=data.brand) }}
+                {{ form.type(class_="form-control", value=data.type, placeholder="MPV, Sedan, SUV, ...")}}
             </div>
         </div>
 

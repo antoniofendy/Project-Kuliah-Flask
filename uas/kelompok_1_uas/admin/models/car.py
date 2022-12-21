@@ -16,7 +16,6 @@ class Car(db.Model):
     type = db.Column(db.String(255), nullable=False)
     brand = db.Column(db.String(255), nullable=False)
     picture = db.Column(db.String(255), nullable=False)
-    model = db.Column(db.String(255), nullable=False)
     transmission = db.Column(db.Enum(Transmission), nullable=False)
     seats = db.Column(db.Integer, nullable=False)
     luggage = db.Column(db.Integer, nullable=False)

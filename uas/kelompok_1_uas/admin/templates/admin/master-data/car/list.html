@@ -31,9 +31,9 @@
 <table class="table" id="dataTable">
     <thead>
         <tr>
+            <th scope="col" width="20%">Brand</th>
             <th scope="col" width="30%">Model</th>
             <th scope="col" width="20%">Tipe</th>
-            <th scope="col" width="20%">Brand</th>
             <th scope="col" width="15%">Maksimal Penumpang</th>
             <th scope="col" width="15%">Aksi</th>
         </tr>
@@ -41,9 +41,9 @@
     <tbody>
         {% for d in data %}
         <tr>
+            <td>{{ d.brand }}</td>
             <td>{{ d.model }}</td>
             <td style="text-transform: capitalize;">{{ d.type }}</td>
-            <td>{{ d.brand }}</td>
             <td>{{ d.seats }}</td>
             <td class="col-md-2">
                 <a href="{{url_for('admin_md_car.read', id=d.id)}}" class="btn text-primary bg-transparent"><i
