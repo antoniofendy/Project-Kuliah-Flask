@@ -1,6 +1,5 @@
-from kelompok_1_uas.user.models.user import User
-from kelompok_1_uas.user.forms.user import UserForm
-from kelompok_1_uas.user.controllers import user as user_controller
+from kelompok_1_uas.admin.controllers import stock as stock_controller
+from kelompok_1_uas.admin.controllers import car as car_controller
 
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 
@@ -11,7 +10,22 @@ user_main_bp = Blueprint(
     template_folder="../templates",
 )
 
-
 @user_main_bp.route("/")
 def index():
-    return render_template("site/index.html")
+    stock = stock_controller.get_all_available()
+    # car_list = []
+
+    # tampilkan data mobil dengan stok/quantity > 0
+
+    # for s in stock:
+    #     duplicate = False
+    #     if len(car_list) != 0:
+    #         for c in car_list:
+    #             if s.car_id == c.id :
+    #                 duplicate = True
+    #                 break
+    #     if not duplicate:
+    #         car_list.append(car_controller.get(s.car_id))
+
+    print(stock)
+    return render_template("site/index.html", data=stock)

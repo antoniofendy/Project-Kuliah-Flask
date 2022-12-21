@@ -21,4 +21,4 @@ class Car(db.Model):
     luggage = db.Column(db.Integer, nullable=False)
     fuel = db.Column(db.Enum(Fuel), nullable=False)
 
-    # stock = db.relationship("Stock", backref="car", lazy=True)
+    # stock = db.relationship("Stock", backref="car_has_stock", lazy=True)

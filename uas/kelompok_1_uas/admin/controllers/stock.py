@@ -7,6 +7,11 @@ def get_all():
     return response
 
 
+def get_all_available():
+    response = Stock.query.order_by(Stock.car_id.asc()).filter(Stock.quantity > 0).all()
+    return response
+
+
 def get(id):
     return db.get_or_404(Stock, id)
 
