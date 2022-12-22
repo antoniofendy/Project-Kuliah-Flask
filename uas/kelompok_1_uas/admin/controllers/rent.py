@@ -20,9 +20,6 @@ def create(Rent):
 
 def update(rent):
     cur_rent = db.get_or_404(Rent, rent["id"])
-    cur_rent.dropoff_garage_id = rent["dropoff_location"]
-    cur_rent.dropoff_datetime = rent["dropoff_datetime"]
-    cur_rent.note = rent["note"]
     cur_rent.status = rent["status"]
     cur_rent.updated_at = datetime.now()
 

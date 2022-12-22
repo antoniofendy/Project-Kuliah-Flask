@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
 
 from kelompok_1_uas import db
+from sqlalchemy import exists
 
 from kelompok_1_uas.admin.forms.reservation import ReservationForm
 from kelompok_1_uas.admin.controllers import reservation as reservation_controller
@@ -10,6 +11,7 @@ from kelompok_1_uas.user.models.user import User
 from kelompok_1_uas.admin.models.car import Car
 from kelompok_1_uas.admin.models.stock import Stock
 from kelompok_1_uas.admin.models.garage import Garage
+from kelompok_1_uas.admin.models.rent import Rent
 
 from datetime import datetime
 
@@ -132,6 +134,29 @@ def delete():
 
     flash("Reservasi berhasil dihapus.", category="info")
     return redirect(url_for("admin_reservation.read"))
+
+
+@admin_reservation_bp.route("/get-reservation-by-user", methods=["POST"])
+def get_reservation_by_user():
+    user_id = request.form.get("user_id")
+    data = (
+        Reservation.query.where(Reservation.user_id == user_id)
+        .filter(
+            Reservation.status.in_((ReservationStatus.OPEN, ReservationStatus.RENTED))
+        )
+        .all()
+    )
+
+    return jsonify(
+        [
+            {
+                "id": r.id,
+                "name": f"Reservasi {r.id}: {r.stock.car.brand} {r.stock.car.model}",
+                "status": r.status.name,
+            }
+            for r in data
+        ]
+    )
 
 
 def get_user_selections():
