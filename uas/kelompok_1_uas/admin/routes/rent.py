@@ -1,6 +1,14 @@
-import os
+import os, json
 
-from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    flash,
+    url_for,
+    redirect,
+    jsonify,
+)
 from werkzeug.utils import secure_filename
 
 from kelompok_1_uas import db
@@ -15,6 +23,7 @@ from kelompok_1_uas.admin.models.car import Car
 from kelompok_1_uas.admin.models.stock import Stock
 from kelompok_1_uas.admin.models.garage import Garage
 from kelompok_1_uas.admin.models.reservation import Reservation, ReservationStatus
+from kelompok_1_uas.admin.controllers import reservation as reservation_controller
 
 from datetime import datetime
 
@@ -64,6 +73,7 @@ def read(id):
 
 @admin_rent_bp.route("/create", methods=["GET", "POST"])
 def create():
+
     if request.method == "POST":
         reservation = db.get_or_404(Reservation, request.form.get("reservation"))
 
@@ -114,7 +124,84 @@ def create():
     users = get_user_selections()
     form.user.choices = users
 
-    return render_template("admin/rent/form.html", form=form, data=None)
+    prefil = {}
+    # If url has ID, validate rents
+    if id_ := request.args.get("id"):
+        reservation = db.get_or_404(Reservation, id_)
+        if reservation and reservation.status in [
+            ReservationStatus.OPEN,
+            ReservationStatus.RENTED,
+        ]:
+            # Validate reservation payments
+            payment_paid = validate_payments(id_)
+
+            if not isinstance(payment_paid, bool):
+                return redirect(url_for("admin_rent.read", id=payment_paid))
+
+            # Fill standard values
+            form.user.default = reservation.user_id
+            form.reservation.choices = [
+                (
+                    reservation.id,
+                    f"Reservasi {reservation.id}: {reservation.stock.car.brand} {reservation.stock.car.model}",
+                )
+            ]
+            form.reservation.default = reservation.id
+
+            # Standard rent cost
+            standard_amount = reservation.stock.price_per_day
+
+            # Calculate reservation length
+            date_range = (
+                reservation.dropoff_datetime - reservation.pickup_datetime
+            ).days + 1
+
+            # Create new payment if none is paid
+            if not payment_paid:
+                prefil["total"] = (date_range * standard_amount) or standard_amount
+                form.type.default = PaymentType.PAYMENT.name
+            else:
+                # Validate reservation charges
+                charge_paid = validate_charges(id_)
+
+                last_payment = (
+                    Rent.query.where(Rent.reservation_id == id_)
+                    .where(Rent.type == PaymentType.PAYMENT)
+                    .order_by(Rent.id.desc())
+                    .first()
+                )
+
+                if not isinstance(charge_paid, bool):
+                    return redirect(url_for("admin_rent.read", id=charge_paid))
+
+                # Create new charge if none is paid, last payment has a charge rule, and dropoff date exceeded
+                if (
+                    last_payment.charge_rule
+                    and reservation.dropoff_datetime < datetime.now()
+                    and not charge_paid
+                ):
+                    total = (standard_amount * date_range) or standard_amount
+                    late_days = (datetime.now() - reservation.dropoff_datetime).days
+
+                    if last_payment.charge_rule.type == ChargeType.NOMINAL:
+                        prefil["total"] = (
+                            late_days * last_payment.charge_rule.amount
+                        ) or last_payment.charge_rule.amount
+                    elif last_payment.charge_rule.type == ChargeType.PERCENTAGE:
+                        standard_charge = total * last_payment.charge_rule.amount
+                        prefil["total"] = (
+                            standard_charge * late_days
+                        ) or standard_charge
+
+                    form.type.default = PaymentType.CHARGE.name
+
+                else:
+                    reservation_controller.return_reservation(id_)
+                    return redirect(url_for("admin_reservation.read", id=id_))
+
+            form.process()
+
+    return render_template("admin/rent/form.html", form=form, data=None, prefil=prefil)
 
 
 @admin_rent_bp.route("/update", methods=["POST"])
@@ -152,9 +239,13 @@ def get_total():
         reservation.stock.price_per_day * date_range
     ) or reservation.stock.price_per_day
 
-    rent = Rent.query.where(Rent.reservation_id == reservation_id).first()
+    rent = (
+        Rent.query.where(Rent.reservation_id == reservation_id)
+        .where(Rent.type == PaymentType.PAYMENT.name)
+        .first()
+    )
 
-    if rent and reservation.dropoff_datetime < datetime.now():
+    if charged := rent and reservation.dropoff_datetime < datetime.now():
         amount = rent.charge_rule.amount
 
         if rent.charge_rule.type == ChargeType.NOMINAL:
@@ -167,9 +258,15 @@ def get_total():
     return jsonify(
         {
             "total": total,
-            "type": PaymentType.CHARGE.name if rent else PaymentType.PAYMENT.name,
+            "type": PaymentType.CHARGE.name if charged else PaymentType.PAYMENT.name,
         }
     )
+
+
+@admin_rent_bp.route("/make-rent/<int:id>")
+def make_rent(id):
+
+    return redirect(url_for("admin_rent.create", id=id))
 
 
 def get_user_selections():
@@ -182,3 +279,40 @@ def get_charge_rule_selections():
     rules = ChargeRule.query.all()
 
     return [(cr.id, cr.name) for cr in rules]
+
+
+def validate_payments(reservation_id):
+    reservation = db.get_or_404(Reservation, reservation_id)
+
+    payment_rents = (
+        Rent.query.where(Rent.reservation_id == reservation_id)
+        .where(Rent.type == PaymentType.PAYMENT)
+        .all()
+    )
+
+    for pr in payment_rents:
+        print(pr.status)
+        if pr.status != RentStatus.PAID:
+            return pr.id
+    return bool(payment_rents)
+
+
+def validate_charges(reservation_id):
+    reservation = db.get_or_404(Reservation, reservation_id)
+
+    charge_rents = (
+        (
+            Rent.query.where(Rent.reservation_id == reservation_id).where(
+                Rent.type == PaymentType.CHARGE
+            )
+        )
+        .order_by(Rent.updated_at.desc())
+        .all()
+    )
+
+    for cr in charge_rents:
+        if cr.status != RentStatus.PAID:
+            return cr.id
+            return redirect(url_for("admin_rent.read", id=cr.id))
+
+    return bool(charge_rents)

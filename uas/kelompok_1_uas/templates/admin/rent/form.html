@@ -85,7 +85,7 @@ Sewa Baru
 
             <div class="col-12 col col-md-6 mt-2 m-md-0">
                 {{ form.admin.label() }}
-                {{ form.admin(class_="form-control") }}
+                {{ form.admin(class_="form-control selectpicker") }}
             </div>
         </div>
         {% endif %}
@@ -120,11 +120,13 @@ Sewa Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.transfer_file.label() }}
+                {% if data %}
                 <div class="img">
                     <img class="img__img img__img--large"
                         src="{{ url_for('static', filename='upload/receipt/'+(data.transfer_file or '')) }}">
                 </div>
-                {% if data.status and data.status.name != "PAID" %}
+                {% endif %}
+                {% if not data or (data.status and data.status.name != "PAID") %}
                 {{ form.transfer_file(class_="form-control-file mt-2", disabled=(data.status == "PAID")) }}
                 {% endif %}
             </div>
@@ -134,7 +136,8 @@ Sewa Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.total.label() }}
-                {{ form.total(class_="form-control", value=data.total, disabled=True if data else False) }}
+                {{ form.total(class_="form-control", value=data.total or prefil.total, disabled=True if data else False)
+                }}
             </div>
         </div>
 
@@ -142,7 +145,7 @@ Sewa Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.status.label() }}
-                {{ form.status(class_="form-control") }}
+                {{ form.status(class_="form-control selectpicker") }}
             </div>
         </div>
         {% endif %}

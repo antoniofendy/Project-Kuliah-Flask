@@ -37,6 +37,7 @@
             <th scope="col">Lokasi Pengambilan</th>
             <th scope="col">Jadwal Pengambilan</th>
             <th scope="col">Status</th>
+            <th scope="col">Tanggal/Waktu Pengambilan</th>
             <th scope="col">Aksi</th>
         </tr>
     </thead>
@@ -48,6 +49,7 @@
             <td>{{ "{0} {1}".format(d.stock.car.brand, d.stock.car.model) }}</td>
             <td>{{ d.user.name }}</td>
             <td>{{ d.pickup.name }}</td>
+            <td>{{ d.status.value }}</td>
             <td>{{ d.pickup_datetime }}</td>
             <td class="col-md-2">
                 <a href="{{url_for('admin_reservation.read', id=d.id)}}" class="btn text-primary bg-transparent"><i

@@ -1,5 +1,6 @@
 from kelompok_1_uas import db
-from kelompok_1_uas.admin.models.reservation import Reservation
+from kelompok_1_uas.admin.models.reservation import Reservation, ReservationStatus
+from kelompok_1_uas.admin.models.stock import Stock
 
 from datetime import datetime
 
@@ -13,8 +14,12 @@ def get(id):
     return db.get_or_404(Reservation, id)
 
 
-def create(Reservation):
-    db.session.add(Reservation)
+def create(_Reservation):
+    stock = db.get_or_404(Stock, _Reservation.stock_id)
+    if stock.quantity < 1:
+        return "Stok tidak cukup"
+
+    db.session.add(_Reservation)
     db.session.commit()
 
 
@@ -26,6 +31,19 @@ def update(reservation):
     cur_reservation.status = reservation["status"]
     cur_reservation.updated_at = datetime.now()
 
+    db.session.commit()
+
+
+def return_reservation(id_):
+    cur_reservation = db.get_or_404(Reservation, id_)
+    cur_reservation.status = ReservationStatus.RETURN.name
+    cur_reservation.stock.quantity += 1
+    db.session.commit()
+
+
+def cancel_reservation(id_):
+    cur_reservation = db.get_or_404(Reservation, id_)
+    cur_reservation.status = ReservationStatus.FAIL.name
     db.session.commit()
 
 

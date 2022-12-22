@@ -74,8 +74,8 @@ Reservasi Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.user.label() }}
-                {{ form.user(class_="form-control selectpicker live-search", value=data.user_id, title="Pilih
-                pelanggan", disabled=True if data else False) }}
+                {{ form.user(class_="form-control selectpicker live-search", value=data.user_id,
+                title="Pilih pelanggan", disabled=True if data else False) }}
             </div>
         </div>
 
@@ -90,13 +90,15 @@ Reservasi Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.pickup_location.label() }}
-                {{ form.pickup_location(class_="form-control selectpicker", value=data.pickup_garage_id, title="Pilih
-                lokasi pengambilan", disabled=True if data else False) }}
+                {{ form.pickup_location(class_="form-control selectpicker", value=data.pickup_garage_id,
+                title="Pilih lokasi pengambilan", disabled=True if data else False) }}
             </div>
             <div class="col-12 col col-md-6 mt-2  m-md-0">
                 {{ form.dropoff_location.label() }}
-                {{ form.dropoff_location(class_="form-control selectpicker", value=data.dropoff_garage_id, title="Pilih
-                lokasi pengembalian") }}
+                {{ form.dropoff_location(class_="form-control selectpicker", value=data.dropoff_garage_id,
+                title="Pilih lokasi pengembalian", disabled=True if data.status and (data.status.name in ["RETURN",
+                "FAIL"] )
+                else False) }}
             </div>
         </div>
 
@@ -114,14 +116,16 @@ Reservasi Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.dropoff_date.label() }}
-                {{ form.dropoff_date(class_="form-control") }}
+                {{ form.dropoff_date(class_="form-control", disabled=True if data.status and (data.status.name in
+                ["RETURN", "FAIL"] ) else False) }}
             </div>
         </div>
 
         <div class="form-row my-2">
             <div class="col-12 col col-xl-6 m-md-0">
                 {{ form.note.label() }}
-                {{ form.note(class_="form-control", value=data.note) }}
+                {{ form.note(class_="form-control", value=data.note, disabled=True if data.status and
+                (data.status.name in ["RETURN", "FAIL"] ) else False) }}
             </div>
         </div>
 
@@ -129,15 +133,64 @@ Reservasi Baru
         <div class="form-row my-2">
             <div class="col-12 col col-md-6 m-md-0">
                 {{ form.status.label() }}
-                {{ form.status(class_="form-control") }}
+                {{ form.status(class_="form-control selectpicker", disabled=True) }}
             </div>
         </div>
         {% endif %}
 
+        {% if not data or (data.status and not (data.status.name in ["RETURN", "FAIL"] )) %}
+        {{ form.submit(class_="btn btn-outline-primary shadow-sm mt-3") }}
+        {% endif %}
 
-        {{ form.submit(class_="btn btn-outline-success shadow-sm mt-3") }}
+        {% if data.status and data.status.name == "OPEN" %}
+        <a class="btn btn-outline-success shadow-sm mt-3 ml-1"
+            href="{{ url_for('admin_rent.make_rent', id=data.id) }}">Konfirmasi</a>
+        <a class="btn btn-outline-danger shadow-sm mt-3 float-right" data-id="{{ data.id }}" data-toggle="modal"
+            data-target="#cancelModal">Batal</a>
+        {% elif data.status and data.status.name == "RENTED" %}
+        <a class="btn btn-outline-info shadow-sm mt-3 ml-1" data-id="{{ data.id }}" data-toggle="modal"
+            data-target="#returnModal">Kembali</a>
+        {% endif %}
+
+
     </form>
     {% endif %}
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5>Batalkan reservasi ini?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="{{url_for('admin_reservation.cancel_reservation')}}" method="post">
+                    <input type="hidden" name="id" id="cancel_id" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="submit" class="btn btn-danger">Ya</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5>Selesaikan reservasi ini?</h5>
+            </div>
+            <div class="modal-footer">
+                <form action="{{url_for('admin_reservation.return_reservation')}}" method="post">
+                    <input type="hidden" name="id" id="return_id" value="">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                    <button type="submit" class="btn btn-primary">Ya</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
@@ -156,6 +209,27 @@ Reservasi Baru
             $(this).removeAttr('disabled');
         })
     });
+
+
+
+    $('#cancelModal').on('show.bs.modal', function (e) {
+        let button = $(e.relatedTarget)
+        let cancel_id = button.data('id')
+
+        let modal = $(this)
+
+        modal.find('.modal-footer #cancel_id').val(cancel_id)
+    })
+
+
+    $('#returnModal').on('show.bs.modal', function (e) {
+        let button = $(e.relatedTarget)
+        let return_id = button.data('id')
+
+        let modal = $(this)
+
+        modal.find('.modal-footer #return_id').val(return_id)
+    })
 
     $('select[name=car]').on('change', () => {
         $.post('/admin/master-data/stock/get-available-garage', {

@@ -11,7 +11,9 @@ from kelompok_1_uas.user.models.user import User
 from kelompok_1_uas.admin.models.car import Car
 from kelompok_1_uas.admin.models.stock import Stock
 from kelompok_1_uas.admin.models.garage import Garage
-from kelompok_1_uas.admin.models.rent import Rent
+from kelompok_1_uas.admin.models.rent import Rent, RentStatus, PaymentType
+from kelompok_1_uas.admin.models.charge_rule import ChargeType
+
 
 from datetime import datetime
 
@@ -33,9 +35,11 @@ def read(id):
         users = get_user_selections()
         form.user.choices = users
         form.user.default = data.user_id
+
         cars = get_car_selections()
         form.car.choices = cars
         form.car.default = data.stock.car.id
+
         garages = Garage.query.all()
         form.pickup_location.choices = [(g.id, g.name) for g in garages]
         form.dropoff_location.choices = [(g.id, g.name) for g in garages]
@@ -157,6 +161,54 @@ def get_reservation_by_user():
             for r in data
         ]
     )
+
+
+@admin_reservation_bp.route("/return", methods=["POST"])
+def return_reservation():
+    print(request.form)
+    id_ = request.form.get("id")
+    reservation = db.get_or_404(Reservation, id_)
+
+    paid_payment_rents = (
+        Rent.query.where(Rent.reservation_id == id_)
+        .where(Rent.type == PaymentType.PAYMENT)
+        .where(Rent.status == RentStatus.PAID)
+        .all()
+    )
+
+    # Check if reservation has all been paid
+    if paid_payment_rents:
+        # Check if reservation is late and all charges have all been paid
+        if reservation.dropoff_datetime < datetime.now():
+            paid_charge_rents = (
+                Rent.query.where(Rent.reservation_id == id_)
+                .where(Rent.type == PaymentType.CHARGE)
+                .where(Rent.status == RentStatus.PAID)
+                .all()
+            )
+
+            # If late and no charges, create one
+            if not paid_charge_rents:
+                return redirect(url_for("admin_rent.create", id=id_, late=True))
+
+        # If payments are paid and no charges left, return
+        reservation_controller.return_reservation(id_)
+        return redirect(url_for("admin_reservation.read", id=id_))
+    else:
+        # If no payments
+        return redirect(
+            url_for(
+                "admin_rent.create",
+                id=id_,
+            )
+        )
+
+
+@admin_reservation_bp.route("/cancel", methods={"POST"})
+def cancel_reservation():
+    id_ = request.form.get("id")
+    reservation_controller.cancel_reservation(id_)
+    return redirect(url_for("admin_reservation.read"))
 
 
 def get_user_selections():

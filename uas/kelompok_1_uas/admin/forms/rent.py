@@ -15,7 +15,7 @@ class RentForm(FlaskForm):
         "Tipe Transaksi", choices=[("PAYMENT", "Pembayaran"), ("CHARGE", "Denda")]
     )
     transfer_file = FileField("Bukti Pembayaran")
-    total = StringField("Total Dibayar")
+    total = IntegerField("Total Dibayar")
     status = SelectField(
         "Status Transaksi",
         choices=[
