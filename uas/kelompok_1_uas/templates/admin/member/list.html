@@ -1,0 +1,56 @@
+{% extends 'admin/list.html' %}
+
+{% block title %}Daftar Member{% endblock %}
+
+{% block list %}
+<div class="h3 mb-2 text-gray-800">
+    Daftar Member
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="alert alert-{{category}} mb-2">
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endwith %}
+
+<table class="table" id="dataTable">
+    <thead>
+        <tr>
+            <th scope="col" width="15%">Nama</th>
+            <th scope="col" width="15%">Jenis Kelamin</th>
+            <th scope="col" width="15%">Telepon</th>
+            <th scope="col" width="15%">Email</th>
+            <th scope="col" width="20%">Alamat</th>
+            <th scope="col" width="10%">Tanggal Lahir</th>
+            <th scope="col" width="15%">Pekerjaan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in member %}
+        <tr>
+            <td>{{ m.name }}</td>
+            <td>{{ m.sex.value }}</td>
+            <td>{{ m.phone }}</td>
+            <td>{{ m.email }}</td>
+            <td>{{ m.address }}</td>
+            <td>{{ m.date_of_birth }}</td>
+            <td>{{ m.occupation }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block script %}
+{{super()}}
+
+<script>
+</script>
+
+{% endblock %}

@@ -62,6 +62,7 @@ def create_app():
     app.register_blueprint(admin_routes.rent.admin_rent_bp)
     app.register_blueprint(admin_routes.reporting.admin_reporting_bp)
     app.register_blueprint(admin_routes.auth.auth_bp)
+    app.register_blueprint(admin_routes.member.admin_member_bp)
 
     # User side blueprint registers
     app.register_blueprint(user_routes.user.user_user_bp)

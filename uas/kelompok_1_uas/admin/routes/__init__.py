@@ -9,4 +9,5 @@ from . import (
     rent,
     reporting,
     auth,
+    member
 )
