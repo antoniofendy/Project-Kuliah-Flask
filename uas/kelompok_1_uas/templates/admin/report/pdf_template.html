@@ -1,16 +1,55 @@
-<table>
-    <thead>
-        <th>
-        <td>Kode Reservasi</td>
-        <td>Klien</td>
-        </th>
-    </thead>
-    <tbody>
-        {% for r in reservation %}
-        <tr>
-            <td>{{ r.id }}</td>
-            <td>{{ r.user.name }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+</head>
+
+<body style="font-size: 12pt; font-family: Caliri; padding: 10px">
+
+    <h3>Laporan Rental</h3>
+
+    <h5>Periode</h5>
+    <p>{{start_date}} Sampai {{end_date}}</p>
+    <table class="table mt-3">
+        <thead class="thead-dark">
+            <th>Kode Rental</th>
+            <th>Klien</th>
+            <th>Mobil</th>
+            <th>Waktu Rental</th>
+            <th>Total Bayar</th>
+            <th>Status</th>
+        </thead>
+        <tbody>
+            {% for r in rent %}
+            <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.user.name }}</td>
+                <td>{{ r.stock.car.brand }} {{ r.stock.car.model }} ({{r.stock.car.type}})</td>
+                <td>{{ r.reservation.pickup_datetime.strftime('%d-%m-%Y') }} s.d. {{
+                    r.reservation.dropoff_datetime.strftime('%d-%m-%Y') }}</td>
+                <td>Rp{{ r.total }}</td>
+                <td>{{r.status.value}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="5"><b>Total Pendapatan</b></td>
+                <td colspan="1">Rp{{total}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
