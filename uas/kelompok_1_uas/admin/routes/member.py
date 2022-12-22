@@ -13,5 +13,8 @@ admin_member_bp = Blueprint(
 
 @admin_member_bp.route("/")
 def read():
-    member = User.query.all()
-    return render_template("admin/member/list.html", member=member)
+    if('user' in session):
+        member = User.query.all()
+        return render_template("admin/member/list.html", member=member)
+
+    return render_template("admin/login.html")
