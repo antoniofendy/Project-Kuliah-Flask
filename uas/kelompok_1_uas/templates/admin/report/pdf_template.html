@@ -1,0 +1,16 @@
+<table>
+    <thead>
+        <th>
+        <td>Kode Reservasi</td>
+        <td>Klien</td>
+        </th>
+    </thead>
+    <tbody>
+        {% for r in reservation %}
+        <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.user.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

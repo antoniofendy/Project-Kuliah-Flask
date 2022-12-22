@@ -1,7 +1,7 @@
 import os
 
-from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
-from werkzeug.utils import secure_filename
+from flask import Blueprint, render_template, request, flash, url_for, redirect, make_response
+import pdfkit
 
 from kelompok_1_uas import db
 
@@ -29,7 +29,17 @@ admin_reporting_bp = Blueprint(
 def generate_report():
     if request.method == "POST":
 
-        flash("Laporan berhasil dibuat.", category="success")
-        return redirect(url_for("admin_reporting.generate_report"))
+        reservation = Reservation.query.all()
+        rendered = render_template("admin/report/pdf_template.html", reservation=reservation)
+        config = pdfkit.configuration(wkhtmltopdf = 'C:\Program Files\wkhtmltopdf\\bin\wkhtmltopdf.exe')
+        pdf = pdfkit.from_string(rendered, configuration=config)
+        
+        response = make_response(pdf)
+        response.headers['Content-Type'] = 'template'
+        response.headers['Content-Disposition'] = 'output.pdf'
+        
+        print(response)
+    
+        return response
 
     return render_template("admin/report/form.html", data=None)

@@ -67,13 +67,13 @@ Cetak Laporan
 <div class="card card-body">
 
     <div class="h3 mb-2 text-gray-800">
-        Cetak Laporan
+        Cetak Laporan Reservasi
     </div>
 
     <form action="{{url_for('admin_reporting.generate_report')}}" method="POST">
 
         <div class="row d-flex-column">
-            <div class="col-12 col-md-4">
+            <!-- <div class="col-12 col-md-4">
                 <div class="form-group">
                     <label for="">Jenis Laporan</label>
                     <select required name="report_type" id="report_type " class="form-control selectpicker"
@@ -82,7 +82,7 @@ Cetak Laporan
                         <option value="RENTAL">Rental</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
             <div class="col-12 col-md-4">
                 <div class="form-group">
                     <label for="">Tanggal Awal</label>
