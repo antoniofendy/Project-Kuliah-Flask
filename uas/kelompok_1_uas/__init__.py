@@ -54,4 +54,10 @@ def create_app():
     # Site side blueprint registers
     app.register_blueprint(site_routes.main.site_main_bp)
 
+    @app.template_filter()
+    def currency_format(value):
+        value = value or 0
+        value = float(value)
+        return f"Rp {value:,.0f}"
+
     return app
