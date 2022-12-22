@@ -64,9 +64,9 @@ def update():
     return redirect(url_for("user_user.read"))
 
 
-@user_user_bp.route("/login", methods=["POST"])
+@user_user_bp.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("../../site/loginUser.html", form=UserForm(), data=None)
+    return render_template("site/loginUser.html")
 
 
 @user_user_bp.route("/delete", methods=["POST"])
