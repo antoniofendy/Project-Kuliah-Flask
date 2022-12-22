@@ -1,0 +1,98 @@
+{% extends 'site/base.html' %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('/static/images/bg_3.jpg');"
+    data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+            <div class="col-md-9 ftco-animate pb-5">
+                <p class="breadcrumbs"><span class="mr-2"><a href="{{url_for('user_main.index')}}">Home <i
+                                class="ion-ios-arrow-forward"></i></a></span> <span>Rental <i
+                            class="ion-ios-arrow-forward"></i></span>
+                </p>
+                <h1 class="mb-3 bread">Pembayaran Rental Mobil</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section contact-section">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endwith %}
+        <div class="row d-flex mb-5 contact-info">
+            <div class="col-md-4">
+                <h3>Detail Rental</h3>
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="border w-100 p-4 rounded mb-2 d-flex-column">
+                            <p><span>Kode Rental:</span> {{rent.id}}</p>
+                            <p class="mt-2"><span>Mobil:</span> {{rent.stock.car.brand}} {{rent.stock.car.model}}
+                                ({{rent.stock.car.type}})</p>
+                            <p class="mt-2"><span>Biaya Rental:</span> Rp{{rent.stock.price_per_day}}/hari</p>
+                            <p class="mt-2"><span>Waktu Pengambilan:</span>
+                                {{rent.reservation.pickup_datetime.strftime('%d-%m-%Y %H:%M:%S')}}</p>
+                            <p class="mt-2"><span>Waktu Pengembalian:</span>
+                                {{rent.reservation.dropoff_datetime.strftime('%d-%m-%Y')}}</p>
+                            <p class="mt-2"><span>Status Rental:</span>
+                                {{rent.status.value}}</p>
+                            <p class="mt-2"><span>Total Bayar:</span>Rp{{rent.total}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 block-9 mb-md-5">
+                <h3>Formulir Pembayaran Rental</h3>
+                <form action="{{ url_for('user.pay_rent', id=rent.id) }}" class="bg-light p-5 contact-form"
+                    method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{rent.id}}">
+                    <div class="form-group">
+                        <label for="">Foto Bukti Transfer</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" name="transfer_file" id="transfer_file" class="custom-file-input"
+                                    id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                                <label class="custom-file-label" for="inputGroupFile01">Pilih File</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Konfirmasi Pembayaran" class="btn btn-primary py-2 px-5 mt-2">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    $('#transfer_file').on('change', function () {
+        //get the file name
+        let fileName = $(this).val().replace('C:\\fakepath\\', " ");
+
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
+    })
+</script>
+{% endblock %}

@@ -26,6 +26,15 @@ def update(rent):
     db.session.commit()
 
 
+def user_pay_rent(rent):
+    cur_rent = db.get_or_404(Rent, rent["id"])
+    cur_rent.transfer_file = rent["transfer_file"]
+    cur_rent.status = rent["status"]
+    cur_rent.updated_at = datetime.now()
+
+    db.session.commit()
+
+
 def delete(id):
     cur_rent = db.get_or_404(Rent, id)
     db.session.delete(cur_rent)

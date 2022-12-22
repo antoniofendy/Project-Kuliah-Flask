@@ -1,3 +1,7 @@
+import os
+
+from werkzeug.utils import secure_filename
+
 from kelompok_1_uas.user.models.user import User
 from kelompok_1_uas.user.forms.user import UserForm
 from kelompok_1_uas.user.controllers import user as user_controller
@@ -5,7 +9,9 @@ from kelompok_1_uas.user.controllers import user as user_controller
 from kelompok_1_uas.admin.models.stock import Stock
 from kelompok_1_uas.admin.controllers import car as car_controller
 from kelompok_1_uas.admin.controllers import reservation as reservation_controller
+from kelompok_1_uas.admin.controllers import rent as rent_controller
 from kelompok_1_uas.admin.models.reservation import Reservation, ReservationStatus
+from kelompok_1_uas.admin.models.rent import Rent
 
 from kelompok_1_uas import db
 
@@ -25,6 +31,12 @@ user_user_bp = Blueprint(
     url_prefix="/user",
     template_folder="../templates",
 )
+
+UPLOAD_FOLDER = "kelompok_1_uas/static/upload/receipt"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @user_user_bp.route("/", defaults={"id": None})
 @user_user_bp.route("/<int:id>")
@@ -145,7 +157,7 @@ def reservation(id):
         )
 
         flash("Reservasi baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("user_main.index"))
+        return redirect(url_for("user.transaction"))
     car = car_controller.get(id)
     stock = Stock.query.where(Stock.car_id == id).where(Stock.quantity >= 0).all()
 
@@ -164,5 +176,59 @@ def transaction():
         .all()
     )
 
+    rent = (Rent.query
+        .where(Rent.user_id == current_user.id)
+        .where(
+            or_(Rent.status == 'UNPAID', Rent.status == 'PENDING'))
+        .all()
+    )
 
-    return render_template("site/transaction.html", reservation = reservation)
+
+    return render_template("site/transaction.html", reservation = reservation, rent = rent)
+
+@user_user_bp.route("/pay-rent/<int:id>", methods=["GET", "POST"])
+@login_required
+def pay_rent(id):
+    if request.method == "POST":
+
+        rent = Rent.query.where(Rent.id == id).first()
+
+        file_ext = None
+        file = request.files["transfer_file"]
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1]
+            file.save(
+                os.path.join(
+                    UPLOAD_FOLDER,
+                    "{fdate}-{fuser}-{fres}{fext}".format(
+                        fdate=datetime.now().date(),
+                        fuser=rent.user_id,
+                        fres=rent.reservation_id,
+                        fext=file_ext,
+                    ),
+                )
+            )
+
+            data = {
+                "id": request.form.get("id"),
+                "transfer_file": "{fdate}-{fuser}-{fres}{fext}".format(
+                        fdate=datetime.now().date(),
+                        fuser=rent.user_id,
+                        fres=rent.reservation_id,
+                        fext=file_ext,
+                    ),
+                "status": "PENDING",
+            }
+
+            rent_controller.user_pay_rent(data)
+            flash("Pembayaran berhasil dilakukan dan akan segera diproses admin.", category="success")
+            return redirect(url_for("user.transaction"))
+
+        flash("Format foto hanya bisa berupa PNG, JPG, dan JPEG.", category="error")
+        return redirect(url_for("user.pay_rent", id=id))
+
+    rent = Rent.query.where(Rent.id == id).first()
+
+    return render_template("site/payRent.html", rent=rent)
+    
