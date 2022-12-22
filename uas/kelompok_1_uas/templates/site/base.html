@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/flaticon.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/icomoon.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+    {% block css %}{% endblock %}
 </head>
 
 <body>
@@ -38,6 +40,8 @@
 
     {% include "site/loader.html" %}
     {% include "site/scripts/scripts.html" %}
+
+    {% block script %}{% endblock %}
 </body>
 
 </html>

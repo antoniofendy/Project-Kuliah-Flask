@@ -95,30 +95,48 @@
             </div>
             <div class="col-md-8 block-9 mb-md-5">
                 <h3>Formulir Reservasi</h3>
-                <form action="#" class="bg-light p-5 contact-form" method="POST">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Your Name">
+                <form action="{{ url_for('user.reservation', id=car.id) }}" class="bg-light p-5 contact-form"
+                    method="POST">
+                    <input type="hidden" name="car_id" value="{{car.id}}">
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <label for="">Lokasi Pengambilan</label>
+                        <select required name="pickup_garage_id" id="pickup_garage_id"
+                            class="form-control selectpicker">
+                            {% for s in stock %}
+                            <option value="{{s.garage_id}}">{{s.garage.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <label for="">Lokasi Pengembalian</label>
+                        <select required name="dropoff_garage_id" id="dropoff_garage_id "
+                            class="form-control selectpicker">
+                            {% for s in stock %}
+                            <option value="{{s.garage_id}}">{{s.garage.name}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Your Email">
+                        <label for="">Tanggal Pengambilan</label>
+                        <input required type="date" name="pickup_date" id="pickup_date" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Subject">
+                        <label for="">Waktu Pengambilan</label>
+                        <input required type="time" name="pickup_time" class="form-control">
                     </div>
                     <div class="form-group">
-                        <textarea name="" id="" cols="30" rows="7" class="form-control"
-                            placeholder="Message"></textarea>
+                        <label for="">Tanggal Pengembalian</label>
+                        <input required type="date" name="dropoff_date" id="dropoff_date" class="form-control">
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+                        <label for="">Catatan</label>
+                        <input type="text" name="note" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Reservasi" class="btn btn-primary py-3 px-5">
                     </div>
                 </form>
 
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div id="map" class="bg-white"></div>
             </div>
         </div>
     </div>
@@ -131,6 +149,29 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-id_ID.min.js"></script>
 
 <script>
+
+    let today = new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+    let yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("pickup_date").setAttribute("min", today);
+    document.getElementById("dropoff_date").setAttribute("min", today);
+
+    $('#pickup_date').on('change', () => {
+        $('#dropoff_date').val('');
+        $('#dropoff_date').attr("min", $('#pickup_date').val());
+    })
+
     setInterval(function () {
 
         if ($('select[name=car_id]').val() == '' || $('select[name=garage_id]').val() == '' || $('input[name=price_per_day]').val() == '' || $('input[name=quantity]').val() == '') {
@@ -141,30 +182,6 @@
         }
 
     }, 500);
-
-    $('select[name=car_id]').on('change', () => {
-        $.post('/admin/master-data/stock/form-api', {
-            car_id: $('select[name=car_id]').val(),
-        }).done(function (response) {
-            console.log(response);
-
-            $('select[name="garage_id"]').empty();
-            $.each(response.garage_list, function (index, value) {
-                $('select[name="garage_id"]').append(`
-            <option value="${value.id}">
-                ${value.name}
-            </option>`);
-            });
-            $('select[name="garage_id"]').selectpicker('refresh');
-
-
-            $('input[name="price_per_day"]').val('');
-            $('input[name="quantity"]').val('');
-
-        }).fail(function () {
-            console.log("Error: Could not contact server.");
-        });
-    });
 
 </script>
 

@@ -1,14 +1,21 @@
 from kelompok_1_uas.user.models.user import User
 from kelompok_1_uas.user.forms.user import UserForm
-from kelompok_1_uas import db
-from kelompok_1_uas.admin.controllers import car as car_controller
+from kelompok_1_uas.user.controllers import user as user_controller
+
 from kelompok_1_uas.admin.models.stock import Stock
+from kelompok_1_uas.admin.controllers import car as car_controller
+from kelompok_1_uas.admin.controllers import reservation as reservation_controller
+from kelompok_1_uas.admin.models.reservation import Reservation, ReservationStatus
+
+from kelompok_1_uas import db
 
 from sqlalchemy import exc
 
 from flask_login import login_user, login_required, logout_user, current_user
 
 import hashlib
+
+from datetime import datetime
 
 from flask import Blueprint, render_template, request, flash, url_for, redirect
 
@@ -101,10 +108,44 @@ def logout():
 @login_required
 def reservation(id):
     if request.method == "POST":
+        selected_car = request.form.get("car_id")
+        selected_pickup_garage = request.form.get("pickup_garage_id")
+        print('garage_id:')
+        print(request.form.get("pickup_garage_id"))
 
-        flash("Password dan password konfirmasi tidak sama.", category="danger")
-        return redirect(url_for("user.register"))
+        stock = (
+            db.session.query(Stock)
+            .where(Stock.car_id == selected_car)
+            .where(Stock.garage_id == selected_pickup_garage)
+            .first()
+        )
 
+        pickup_date = request.form.get("pickup_date")
+        pickup_time = request.form.get("pickup_time")
+        pickup_datetime = datetime.strptime(
+            f"{pickup_date} {pickup_time}", "%Y-%m-%d %H:%M"
+        )
+
+        dropoff_date = request.form.get("dropoff_date")
+        dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
+
+        reservation_controller.create(
+            Reservation(
+                user_id=current_user.id,
+                stock_id=stock.id,
+                pickup_garage_id=int(request.form.get("pickup_garage_id")),
+                dropoff_garage_id=int(request.form.get("dropoff_garage_id")),
+                pickup_datetime=pickup_datetime,
+                dropoff_datetime=dropoff_date,
+                note=request.form.get("note"),
+                status=ReservationStatus.OPEN,
+                created_at=datetime.now(),
+                updated_at=datetime.now(),
+            )
+        )
+
+        flash("Reservasi baru berhasil ditambahkan.", category="success")
+        return redirect(url_for("user_main.index"))
     car = car_controller.get(id)
     stock = db.session.query(Stock).filter_by(car_id=id).all()
 
