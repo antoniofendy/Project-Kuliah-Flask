@@ -19,7 +19,8 @@ def create_app():
 
     # Login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_message = "Anda harus login untuk bisa menggunakan layanan kami!"
+    login_manager.login_view = 'user.login'
     login_manager.init_app(app)
 
     from kelompok_1_uas.user.models.user import User

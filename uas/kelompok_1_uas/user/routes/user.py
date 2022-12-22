@@ -1,7 +1,9 @@
 from kelompok_1_uas.user.models.user import User
 from kelompok_1_uas.user.forms.user import UserForm
 from kelompok_1_uas import db
-from kelompok_1_uas.user.controllers import user as user_controller
+from kelompok_1_uas.admin.controllers import car as car_controller
+from kelompok_1_uas.admin.models.stock import Stock
+
 from sqlalchemy import exc
 
 from flask_login import login_user, login_required, logout_user, current_user
@@ -78,7 +80,7 @@ def login():
             return redirect(url_for('user.login'))
 
         # jika user terdaftar
-        login_user(user, remember=False)
+        login_user(user, remember=True)
         # print(current_user.name)
         return redirect(url_for("user_main.index"))
 
@@ -93,3 +95,19 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("user_main.index"))
+
+
+@user_user_bp.route("/reservation/<int:id>", methods=["GET", "POST"])
+@login_required
+def reservation(id):
+    if request.method == "POST":
+
+        flash("Password dan password konfirmasi tidak sama.", category="danger")
+        return redirect(url_for("user.register"))
+
+    car = car_controller.get(id)
+    stock = db.session.query(Stock).filter_by(car_id=id).all()
+
+    print(stock)
+
+    return render_template("site/reservation.html", car=car, stock=stock)

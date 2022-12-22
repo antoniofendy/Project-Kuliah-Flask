@@ -93,32 +93,32 @@
         </div>
 </section> -->
 
-
 <section class="ftco-section ftco-no-pt bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12 heading-section text-center ftco-animate mb-5">
                 <span class="subheading">Apa yang kami tawarkan?</span>
-                <h2 class="mb-2">Daftar Mobil Tersedia</h2>
+                <h2 class="mb-2">Daftar Mobil Yang Siap Direservasi</h2>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="carousel-car owl-carousel">
-                    {% for stock in data %}
+                    {% for car in data %}
                     <div class="item">
                         <div class="car-wrap rounded ftco-animate">
                             <div class="img rounded d-flex align-items-end">
-                                <img src="{{ url_for('static', filename='/upload/car/'+stock.car.picture) }}" alt=""
+                                <img src="{{ url_for('static', filename='/upload/car/'+car.picture) }}" alt=""
                                     srcset="">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#">{{stock.car.model}} ({{stock.car.type}})</a></h2>
+                                <h2 class="mb-0"><a href="#">{{car.brand}} {{car.model}} ({{car.type}})</a></h2>
                                 <div class="d-flex mb-3">
-                                    <span class="cat">{{stock.car.brand}}</span>
-                                    <p class="price ml-auto">Rp{{stock.price_per_day}} <span>/hari</span></p>
+                                    <span>Biaya mulai dari</span>
+                                    <p class="price ml-auto">Rp{{start_price}}/hari</p>
                                 </div>
-                                <p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rental</a>
+                                <p class="d-flex mb-0 d-block"><a href="{{ url_for('user.reservation', id=car.id) }}"
+                                        class="btn btn-primary py-2 mr-1">Reservasi</a>
                                     <a href="#" class="btn btn-secondary py-2 ml-1">Detail</a>
                                 </p>
                             </div>
