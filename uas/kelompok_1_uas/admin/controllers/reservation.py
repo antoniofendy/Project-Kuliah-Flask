@@ -49,6 +49,8 @@ def cancel_reservation(id_):
 
 def delete(id):
     cur_reservation = db.get_or_404(Reservation, id)
+    if cur_reservation.status == ReservationStatus.RENTED:
+        cur_reservation.stock.quantity += 1
     db.session.delete(cur_reservation)
     db.session.commit()
     pass

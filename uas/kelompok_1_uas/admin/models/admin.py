@@ -1,7 +1,8 @@
 from kelompok_1_uas import db
+from flask_login import UserMixin
 
 
-class Admin(db.Model):
+class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(16))

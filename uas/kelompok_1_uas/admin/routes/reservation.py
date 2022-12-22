@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
+from flask_login import login_required
 
 from kelompok_1_uas import db
 from sqlalchemy import exists
@@ -27,6 +28,7 @@ admin_reservation_bp = Blueprint(
 
 @admin_reservation_bp.route("/", defaults={"id": None})
 @admin_reservation_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = ReservationForm()
@@ -62,6 +64,7 @@ def read(id):
 
 
 @admin_reservation_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
         selected_car = request.form.get("car")
@@ -83,7 +86,7 @@ def create():
         dropoff_date = request.form.get("dropoff_date")
         dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
 
-        reservation_controller.create(
+        message = reservation_controller.create(
             Reservation(
                 user_id=request.form.get("user"),
                 stock_id=stock.id,
@@ -97,6 +100,9 @@ def create():
                 updated_at=datetime.now(),
             )
         )
+
+        if message:
+            flash(message, category="danger")
 
         flash("Reservasi baru berhasil ditambahkan.", category="success")
         return redirect(url_for("admin_reservation.read"))
@@ -112,6 +118,7 @@ def create():
 
 
 @admin_reservation_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     dropoff_date = request.form.get("dropoff_date")
     dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
@@ -131,6 +138,7 @@ def update():
 
 
 @admin_reservation_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 
@@ -141,6 +149,7 @@ def delete():
 
 
 @admin_reservation_bp.route("/get-reservation-by-user", methods=["POST"])
+@login_required
 def get_reservation_by_user():
     user_id = request.form.get("user_id")
     data = (
@@ -164,6 +173,7 @@ def get_reservation_by_user():
 
 
 @admin_reservation_bp.route("/return", methods=["POST"])
+@login_required
 def return_reservation():
     print(request.form)
     id_ = request.form.get("id")
@@ -205,6 +215,7 @@ def return_reservation():
 
 
 @admin_reservation_bp.route("/cancel", methods={"POST"})
+@login_required
 def cancel_reservation():
     id_ = request.form.get("id")
     reservation_controller.cancel_reservation(id_)

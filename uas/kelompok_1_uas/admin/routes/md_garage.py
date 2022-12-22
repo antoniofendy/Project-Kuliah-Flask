@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login import login_required
 
 from kelompok_1_uas.admin.forms.garage import GarageForm
 from kelompok_1_uas.admin.controllers import garage as garage_controller
@@ -14,6 +15,7 @@ admin_md_garage_bp = Blueprint(
 
 @admin_md_garage_bp.route("/", defaults={"id": None})
 @admin_md_garage_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = GarageForm()
@@ -21,7 +23,9 @@ def read(id):
         form.address.data = data.address
         form.address()
 
-        return render_template("admin/master-data/garage/form.html", form=form, data=data)
+        return render_template(
+            "admin/master-data/garage/form.html", form=form, data=data
+        )
 
     return render_template(
         "admin/master-data/garage/list.html", data=garage_controller.get_all()
@@ -29,6 +33,7 @@ def read(id):
 
 
 @admin_md_garage_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
         garage_controller.create(
@@ -47,6 +52,7 @@ def create():
 
 
 @admin_md_garage_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     data = {
         "id": request.form.get("id"),
@@ -61,6 +67,7 @@ def update():
 
 
 @admin_md_garage_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 

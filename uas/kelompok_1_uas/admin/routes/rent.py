@@ -1,4 +1,5 @@
 import os, json
+from flask_login import login_required
 
 from flask import (
     Blueprint,
@@ -44,6 +45,7 @@ def allowed_file(filename):
 
 @admin_rent_bp.route("/", defaults={"id": None})
 @admin_rent_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = RentForm()
@@ -72,6 +74,7 @@ def read(id):
 
 
 @admin_rent_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
 
     if request.method == "POST":
@@ -205,6 +208,7 @@ def create():
 
 
 @admin_rent_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     data = {
         "id": request.form.get("id"),
@@ -218,6 +222,7 @@ def update():
 
 
 @admin_rent_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 
@@ -228,6 +233,7 @@ def delete():
 
 
 @admin_rent_bp.route("/get-total", methods=["POST"])
+@login_required
 def get_total():
     reservation_id = request.form.get("reservation_id")
 
@@ -264,6 +270,7 @@ def get_total():
 
 
 @admin_rent_bp.route("/make-rent/<int:id>")
+@login_required
 def make_rent(id):
 
     return redirect(url_for("admin_rent.create", id=id))

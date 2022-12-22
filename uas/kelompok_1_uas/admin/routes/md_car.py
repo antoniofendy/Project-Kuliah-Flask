@@ -1,6 +1,7 @@
 import os
 
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login import login_required
 
 from werkzeug.utils import secure_filename
 
@@ -18,12 +19,14 @@ admin_md_car_bp = Blueprint(
 UPLOAD_FOLDER = "kelompok_1_uas/static/upload/car"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @admin_md_car_bp.route("/", defaults={"id": None})
 @admin_md_car_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = CarForm()
@@ -41,6 +44,7 @@ def read(id):
 
 
 @admin_md_car_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
 
@@ -53,10 +57,10 @@ def create():
                 os.path.join(
                     UPLOAD_FOLDER,
                     "{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
+                        fbrand=request.form.get("brand"),
                         fmodel=request.form.get("model"),
                         ftype=request.form.get("type"),
-                        fext=file_ext
+                        fext=file_ext,
                     ),
                 )
             )
@@ -67,11 +71,11 @@ def create():
                 type=request.form.get("type"),
                 brand=request.form.get("brand"),
                 picture="{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
-                        fmodel=request.form.get("model"),
-                        ftype=request.form.get("type"),
-                        fext=file_ext
-                    ),
+                    fbrand=request.form.get("brand"),
+                    fmodel=request.form.get("model"),
+                    ftype=request.form.get("type"),
+                    fext=file_ext,
+                ),
                 transmission=request.form.get("transmission"),
                 seats=request.form.get("seats"),
                 luggage=request.form.get("luggage"),
@@ -82,12 +86,11 @@ def create():
         flash("Mobil baru berhasil ditambahkan.", category="success")
         return redirect(url_for("admin_md_car.read"))
 
-    return render_template(
-        "admin/master-data/car/form.html", form=CarForm(), data=None
-    )
+    return render_template("admin/master-data/car/form.html", form=CarForm(), data=None)
 
 
 @admin_md_car_bp.route("/update", methods=["POST"])
+@login_required
 def update():
 
     old_data = car_controller.get(request.form.get("id"))
@@ -104,10 +107,10 @@ def update():
                 os.path.join(
                     UPLOAD_FOLDER,
                     "{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
+                        fbrand=request.form.get("brand"),
                         fmodel=request.form.get("model"),
                         ftype=request.form.get("type"),
-                        fext=file_ext
+                        fext=file_ext,
                     ),
                 )
             )
@@ -119,11 +122,11 @@ def update():
                 "type": request.form.get("type"),
                 "brand": request.form.get("brand"),
                 "picture": "{fbrand}-{fmodel}-{ftype}{fext}".format(
-                        fbrand=request.form.get("brand"), 
-                        fmodel=request.form.get("model"),
-                        ftype=request.form.get("type"),
-                        fext=file_ext
-                    ),
+                    fbrand=request.form.get("brand"),
+                    fmodel=request.form.get("model"),
+                    ftype=request.form.get("type"),
+                    fext=file_ext,
+                ),
                 "transmission": request.form.get("transmission"),
                 "seats": request.form.get("seats"),
                 "luggage": request.form.get("luggage"),
@@ -150,6 +153,7 @@ def update():
 
 
 @admin_md_car_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 

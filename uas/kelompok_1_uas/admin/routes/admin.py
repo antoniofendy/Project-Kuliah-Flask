@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login import login_required
 
 from kelompok_1_uas.admin.forms.admin import AdminForm
 from kelompok_1_uas.admin.controllers import admin as admin_controller
@@ -14,6 +15,7 @@ admin_admin_bp = Blueprint(
 
 @admin_admin_bp.route("/", defaults={"id": None})
 @admin_admin_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = AdminForm()
@@ -25,6 +27,7 @@ def read(id):
 
 
 @admin_admin_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
         admin_controller.create(
@@ -44,6 +47,7 @@ def create():
 
 
 @admin_admin_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     data = {
         "id": request.form.get("id"),
@@ -60,6 +64,7 @@ def update():
 
 
 @admin_admin_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 

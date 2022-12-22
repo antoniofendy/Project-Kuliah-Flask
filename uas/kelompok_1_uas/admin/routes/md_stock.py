@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
+from flask_login import login_required
 
 from kelompok_1_uas import db
 from kelompok_1_uas.admin.models.car import Car
@@ -18,6 +19,7 @@ admin_md_stock_bp = Blueprint(
 
 @admin_md_stock_bp.route("/", defaults={"id": None})
 @admin_md_stock_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = StockForm()
@@ -29,7 +31,15 @@ def read(id):
             flash("Tidak ada Mobil untuk dijadikan Stok.", category="info")
             return redirect(url_for("admin_md_stock.read"))
 
-        car_list = [(c.id, "{cbrand} {cmodel} ({ctype})".format(cbrand=c.brand, cmodel=c.model, ctype=c.type)) for c in car]
+        car_list = [
+            (
+                c.id,
+                "{cbrand} {cmodel} ({ctype})".format(
+                    cbrand=c.brand, cmodel=c.model, ctype=c.type
+                ),
+            )
+            for c in car
+        ]
 
         form.car_id.choices = car_list
 
@@ -41,7 +51,7 @@ def read(id):
 
         garage_list = [(g.id, g.name) for g in garage]
 
-        stock = db.session.query(Stock).filter_by(car_id = data.car_id).all()
+        stock = db.session.query(Stock).filter_by(car_id=data.car_id).all()
 
         for s in stock:
             for g in garage_list:
@@ -55,7 +65,9 @@ def read(id):
 
         form.process()
 
-        return render_template("admin/master-data/stock/form.html", form=form, data=data)
+        return render_template(
+            "admin/master-data/stock/form.html", form=form, data=data
+        )
 
     return render_template(
         "admin/master-data/stock/list.html", data=stock_controller.get_all()
@@ -63,8 +75,9 @@ def read(id):
 
 
 @admin_md_stock_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
-    form=StockForm()
+    form = StockForm()
 
     car = db.session.query(Car).all()
 
@@ -72,7 +85,15 @@ def create():
         flash("Tidak ada Mobil untuk dijadikan Stok.", category="info")
         return redirect(url_for("admin_md_stock.read"))
 
-    car_list = [(c.id, "{cbrand} {cmodel} ({ctype})".format(cbrand=c.brand, cmodel=c.model, ctype=c.type)) for c in car]
+    car_list = [
+        (
+            c.id,
+            "{cbrand} {cmodel} ({ctype})".format(
+                cbrand=c.brand, cmodel=c.model, ctype=c.type
+            ),
+        )
+        for c in car
+    ]
 
     form.car_id.choices = car_list
 
@@ -100,12 +121,11 @@ def create():
         flash("Stok baru berhasil ditambahkan.", category="success")
         return redirect(url_for("admin_md_stock.read"))
 
-    return render_template(
-        "admin/master-data/stock/form.html", form=form, data=None
-    )
+    return render_template("admin/master-data/stock/form.html", form=form, data=None)
 
 
 @admin_md_stock_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     data = {
         "id": request.form.get("id"),
@@ -122,6 +142,7 @@ def update():
 
 
 @admin_md_stock_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 
@@ -132,12 +153,13 @@ def delete():
 
 
 @admin_md_stock_bp.route("/form-api", methods=["POST"])
+@login_required
 def form_api():
-    req_car_id = request.form['car_id']
-    
+    req_car_id = request.form["car_id"]
+
     garage = db.session.query(Garage).all()
-    stock = db.session.query(Stock).filter_by(car_id = req_car_id).all()
-    cols = ['id', 'name', 'address']
+    stock = db.session.query(Stock).filter_by(car_id=req_car_id).all()
+    cols = ["id", "name", "address"]
     data = [{col: getattr(g, col) for col in cols} for g in garage]
 
     print(stock)
@@ -146,12 +168,15 @@ def form_api():
             if d["id"] == s.garage_id:
                 data.remove(d)
 
-    return jsonify(garage_list = data)
+    return jsonify(garage_list=data)
+
 
 @admin_md_stock_bp.route("/get-available-garage", methods=["POST"])
+@login_required
 def get_available_garage():
-    car_id = request.form.get('car_id')
-    
-    
+    car_id = request.form.get("car_id")
+
     available_garage = db.session.query(Stock).filter_by(car_id=car_id).all()
-    return jsonify([{"id": s.garage.id, "name":s.garage.name} for s in available_garage])
+    return jsonify(
+        [{"id": s.garage.id, "name": s.garage.name} for s in available_garage]
+    )

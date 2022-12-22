@@ -17,10 +17,24 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # Admin login manager
+    admin_manager = LoginManager()
+    admin_manager.login_message = "Login untuk mengakses dashboard."
+    admin_manager.login_view = "admin_auth.login"
+    admin_manager.init_app(app)
+
+    from kelompok_1_uas.admin.models.admin import Admin
+
+    @admin_manager.user_loader
+    def load_admin(admin_id):
+        return Admin.query.get(int(admin_id))
+
     # Login manager
     login_manager = LoginManager()
-    login_manager.login_message = "Anda harus login untuk bisa menggunakan layanan kami!"
-    login_manager.login_view = 'user.login'
+    login_manager.login_message = (
+        "Anda harus login untuk bisa menggunakan layanan kami!"
+    )
+    login_manager.login_view = "user.login"
     login_manager.init_app(app)
 
     from kelompok_1_uas.user.models.user import User
@@ -47,6 +61,7 @@ def create_app():
     app.register_blueprint(admin_routes.reservation.admin_reservation_bp)
     app.register_blueprint(admin_routes.rent.admin_rent_bp)
     app.register_blueprint(admin_routes.reporting.admin_reporting_bp)
+    app.register_blueprint(admin_routes.auth.auth_bp)
 
     # User side blueprint registers
     app.register_blueprint(user_routes.user.user_user_bp)

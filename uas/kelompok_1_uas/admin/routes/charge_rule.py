@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask_login import login_required
 
 from kelompok_1_uas.admin.forms.charge_rule import ChargeRuleForm
 from kelompok_1_uas.admin.controllers import charge_rule as charge_rule_controller
@@ -14,6 +15,7 @@ admin_charge_rule_bp = Blueprint(
 
 @admin_charge_rule_bp.route("/", defaults={"id": None})
 @admin_charge_rule_bp.route("/<int:id>")
+@login_required
 def read(id):
     if id:
         form = ChargeRuleForm()
@@ -35,6 +37,7 @@ def read(id):
 
 
 @admin_charge_rule_bp.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
         charge_rule_controller.create(
@@ -54,6 +57,7 @@ def create():
 
 
 @admin_charge_rule_bp.route("/update", methods=["POST"])
+@login_required
 def update():
     data = {
         "id": request.form.get("id"),
@@ -69,6 +73,7 @@ def update():
 
 
 @admin_charge_rule_bp.route("/delete", methods=["POST"])
+@login_required
 def delete():
     id_ = request.form.get("id")
 
