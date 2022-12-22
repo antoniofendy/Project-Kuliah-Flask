@@ -46,6 +46,7 @@ def create_app():
     app.register_blueprint(admin_routes.md_stock.admin_md_stock_bp)
     app.register_blueprint(admin_routes.reservation.admin_reservation_bp)
     app.register_blueprint(admin_routes.rent.admin_rent_bp)
+    app.register_blueprint(admin_routes.reporting.admin_reporting_bp)
 
     # User side blueprint registers
     app.register_blueprint(user_routes.user.user_user_bp)
