@@ -18,5 +18,4 @@ mysqlclient==2.1.1
 SQLAlchemy==1.4.42
 Werkzeug==2.2.2
 WTForms==3.0.1
-pdfkit==1.0.0
-wkhtmltopdf==0.2
+fpdf==1.7.2
