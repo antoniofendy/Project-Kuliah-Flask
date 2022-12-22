@@ -9,7 +9,7 @@ from kelompok_1_uas.admin.models.reservation import Reservation, ReservationStat
 
 from kelompok_1_uas import db
 
-from sqlalchemy import exc
+from sqlalchemy import exc, or_
 
 from flask_login import login_user, login_required, logout_user, current_user
 
@@ -147,8 +147,22 @@ def reservation(id):
         flash("Reservasi baru berhasil ditambahkan.", category="success")
         return redirect(url_for("user_main.index"))
     car = car_controller.get(id)
-    stock = db.session.query(Stock).filter_by(car_id=id).all()
+    stock = Stock.query.where(Stock.car_id == id).where(Stock.quantity >= 0).all()
 
     print(stock)
 
     return render_template("site/reservation.html", car=car, stock=stock)
+
+@user_user_bp.route("/transaction", methods=["GET"])
+@login_required
+def transaction():
+
+    reservation = (Reservation.query
+        .where(Reservation.user_id == current_user.id)
+        .where(
+            or_(Reservation.status == 'OPEN', Reservation.status == 'Fail'))
+        .all()
+    )
+
+
+    return render_template("site/transaction.html", reservation = reservation)
