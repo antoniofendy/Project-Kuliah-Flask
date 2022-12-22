@@ -1,6 +1,7 @@
 from flask import Flask, render_template, abort
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 from config import Config
 
@@ -15,6 +16,18 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    # Login manager
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    from kelompok_1_uas.user.models.user import User
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is just the primary key of our user table, use it in the query for the user
+        return User.query.get(int(user_id))
 
     # Admin side blueprints
     from kelompok_1_uas.admin import routes as admin_routes

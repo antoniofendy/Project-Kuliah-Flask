@@ -11,7 +11,22 @@
                 <li class="nav-item"><a href="/" class="nav-link">Beranda</a></li>
                 <li class="nav-item"><a href="car.html" class="nav-link">Daftar Mobil</a></li>
                 <li class="nav-item"><a href="contact.html" class="nav-link">Kontak</a></li>
+                {% if not current_user.is_authenticated %}
                 <li class="nav-item"><a href="{{ url_for('user.login') }}" class="nav-link">Login</a></li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                        aria-expanded="false">
+                        Akun
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Transaksi</a>
+                        <a class="dropdown-item" href="{{ url_for('user.logout') }}">Logout</a>
+                    </div>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </div>

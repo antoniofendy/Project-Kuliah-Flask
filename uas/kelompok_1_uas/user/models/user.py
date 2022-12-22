@@ -1,11 +1,12 @@
 from kelompok_1_uas import db
+from flask_login import UserMixin
 import enum
 
 class GenderStat(enum.Enum):
     MALE = "Laki-laki"
     FEMALE = "Perempuan"
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(255))
     phone = db.Column(db.String(50), unique = True)

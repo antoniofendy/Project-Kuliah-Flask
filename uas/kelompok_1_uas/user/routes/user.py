@@ -4,6 +4,8 @@ from kelompok_1_uas import db
 from kelompok_1_uas.user.controllers import user as user_controller
 from sqlalchemy import exc
 
+from flask_login import login_user, login_required, logout_user, current_user
+
 import hashlib
 
 from flask import Blueprint, render_template, request, flash, url_for, redirect
@@ -76,6 +78,18 @@ def login():
             return redirect(url_for('user.login'))
 
         # jika user terdaftar
+        login_user(user, remember=False)
+        # print(current_user.name)
         return redirect(url_for("user_main.index"))
 
-    return render_template("site/loginUser.html")
+    if not current_user.is_authenticated:
+        return render_template("site/loginUser.html")
+
+    return redirect(url_for("user_main.index"))
+
+
+@user_user_bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("user_main.index"))
