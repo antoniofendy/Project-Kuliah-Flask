@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify
-from flask_login import login_required
+from flask import Blueprint, render_template, request, flash, url_for, redirect, jsonify,session
 
 from kelompok_1_uas import db
 from sqlalchemy import exists
@@ -28,198 +27,205 @@ admin_reservation_bp = Blueprint(
 
 @admin_reservation_bp.route("/", defaults={"id": None})
 @admin_reservation_bp.route("/<int:id>")
-@login_required
 def read(id):
-    if id:
-        form = ReservationForm()
-        data = reservation_controller.get(id)
+    if('user' in session):
+        if id:
+            form = ReservationForm()
+            data = reservation_controller.get(id)
 
-        users = get_user_selections()
-        form.user.choices = users
-        form.user.default = data.user_id
+            users = get_user_selections()
+            form.user.choices = users
+            form.user.default = data.user_id
 
-        cars = get_car_selections()
-        form.car.choices = cars
-        form.car.default = data.stock.car.id
+            cars = get_car_selections()
+            form.car.choices = cars
+            form.car.default = data.stock.car.id
 
-        garages = Garage.query.all()
-        form.pickup_location.choices = [(g.id, g.name) for g in garages]
-        form.dropoff_location.choices = [(g.id, g.name) for g in garages]
-        form.pickup_location.default = data.pickup_garage_id
-        form.dropoff_location.default = data.dropoff_garage_id
+            garages = Garage.query.all()
+            form.pickup_location.choices = [(g.id, g.name) for g in garages]
+            form.dropoff_location.choices = [(g.id, g.name) for g in garages]
+            form.pickup_location.default = data.pickup_garage_id
+            form.dropoff_location.default = data.dropoff_garage_id
 
-        form.pickup_date.default = data.pickup_datetime
-        form.pickup_time.default = data.pickup_datetime
-        form.dropoff_date.default = data.dropoff_datetime
+            form.pickup_date.default = data.pickup_datetime
+            form.pickup_time.default = data.pickup_datetime
+            form.dropoff_date.default = data.dropoff_datetime
 
-        form.status.default = data.status.name
+            form.status.default = data.status.name
 
-        form.process()
+            form.process()
 
-        return render_template("admin/reservation/form.html", form=form, data=data)
+            return render_template("admin/reservation/form.html", form=form, data=data)
 
-    return render_template(
-        "admin/reservation/list.html", data=reservation_controller.get_all()
-    )
+        return render_template(
+            "admin/reservation/list.html", data=reservation_controller.get_all()
+        )
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/create", methods=["GET", "POST"])
-@login_required
 def create():
-    if request.method == "POST":
-        selected_car = request.form.get("car")
-        selected_pickup_garage = request.form.get("pickup_location")
+    if('user' in session):
+        if request.method == "POST":
+            selected_car = request.form.get("car")
+            selected_pickup_garage = request.form.get("pickup_location")
 
-        stock = (
-            db.session.query(Stock)
-            .where(Stock.car_id == selected_car)
-            .where(Stock.garage_id == selected_pickup_garage)
-            .first()
-        )
-
-        pickup_date = request.form.get("pickup_date")
-        pickup_time = request.form.get("pickup_time")
-        pickup_datetime = datetime.strptime(
-            f"{pickup_date} {pickup_time}", "%Y-%m-%d %H:%M"
-        )
-
-        dropoff_date = request.form.get("dropoff_date")
-        dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
-
-        message = reservation_controller.create(
-            Reservation(
-                user_id=request.form.get("user"),
-                stock_id=stock.id,
-                pickup_garage_id=int(request.form.get("pickup_location")),
-                dropoff_garage_id=int(request.form.get("dropoff_location")),
-                pickup_datetime=pickup_datetime,
-                dropoff_datetime=dropoff_date,
-                note=request.form.get("note"),
-                status=ReservationStatus.OPEN,
-                created_at=datetime.now(),
-                updated_at=datetime.now(),
+            stock = (
+                db.session.query(Stock)
+                .where(Stock.car_id == selected_car)
+                .where(Stock.garage_id == selected_pickup_garage)
+                .first()
             )
-        )
 
-        if message:
-            flash(message, category="danger")
+            pickup_date = request.form.get("pickup_date")
+            pickup_time = request.form.get("pickup_time")
+            pickup_datetime = datetime.strptime(
+                f"{pickup_date} {pickup_time}", "%Y-%m-%d %H:%M"
+            )
 
-        flash("Reservasi baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("admin_reservation.read"))
+            dropoff_date = request.form.get("dropoff_date")
+            dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
 
-    form = ReservationForm()
+            message = reservation_controller.create(
+                Reservation(
+                    user_id=request.form.get("user"),
+                    stock_id=stock.id,
+                    pickup_garage_id=int(request.form.get("pickup_location")),
+                    dropoff_garage_id=int(request.form.get("dropoff_location")),
+                    pickup_datetime=pickup_datetime,
+                    dropoff_datetime=dropoff_date,
+                    note=request.form.get("note"),
+                    status=ReservationStatus.OPEN,
+                    created_at=datetime.now(),
+                    updated_at=datetime.now(),
+                )
+            )
 
-    users = get_user_selections()
-    form.user.choices = users
-    cars = get_car_selections()
-    form.car.choices = cars
+            if message:
+                flash(message, category="danger")
 
-    return render_template("admin/reservation/form.html", form=form, data=None)
+            flash("Reservasi baru berhasil ditambahkan.", category="success")
+            return redirect(url_for("admin_reservation.read"))
+
+        form = ReservationForm()
+
+        users = get_user_selections()
+        form.user.choices = users
+        cars = get_car_selections()
+        form.car.choices = cars
+
+        return render_template("admin/reservation/form.html", form=form, data=None)
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/update", methods=["POST"])
-@login_required
 def update():
-    dropoff_date = request.form.get("dropoff_date")
-    dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
+    if('user' in session):
+        dropoff_date = request.form.get("dropoff_date")
+        dropoff_date = datetime.strptime(dropoff_date, "%Y-%m-%d")
 
-    data = {
-        "id": request.form.get("id"),
-        "dropoff_location": request.form.get("dropoff_location"),
-        "dropoff_datetime": dropoff_date,
-        "note": request.form.get("note"),
-        "status": request.form.get("status"),
-    }
+        data = {
+            "id": request.form.get("id"),
+            "dropoff_location": request.form.get("dropoff_location"),
+            "dropoff_datetime": dropoff_date,
+            "note": request.form.get("note"),
+            "status": request.form.get("status"),
+        }
 
-    reservation_controller.update(data)
+        reservation_controller.update(data)
 
-    flash("Reservasi berhasil diubah.", category="primary")
-    return redirect(url_for("admin_reservation.read"))
+        flash("Reservasi berhasil diubah.", category="primary")
+        return redirect(url_for("admin_reservation.read"))
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/delete", methods=["POST"])
-@login_required
 def delete():
-    id_ = request.form.get("id")
+    if('user' in session):
+        id_ = request.form.get("id")
 
-    reservation_controller.delete(id_)
+        reservation_controller.delete(id_)
 
-    flash("Reservasi berhasil dihapus.", category="info")
-    return redirect(url_for("admin_reservation.read"))
+        flash("Reservasi berhasil dihapus.", category="info")
+        return redirect(url_for("admin_reservation.read"))
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/get-reservation-by-user", methods=["POST"])
-@login_required
 def get_reservation_by_user():
-    user_id = request.form.get("user_id")
-    data = (
-        Reservation.query.where(Reservation.user_id == user_id)
-        .filter(
-            Reservation.status.in_((ReservationStatus.OPEN, ReservationStatus.RENTED))
+    if('user' in session):
+        user_id = request.form.get("user_id")
+        data = (
+            Reservation.query.where(Reservation.user_id == user_id)
+            .filter(
+                Reservation.status.in_((ReservationStatus.OPEN, ReservationStatus.RENTED))
+            )
+            .all()
         )
-        .all()
-    )
 
-    return jsonify(
-        [
-            {
-                "id": r.id,
-                "name": f"Reservasi {r.id}: {r.stock.car.brand} {r.stock.car.model}",
-                "status": r.status.name,
-            }
-            for r in data
-        ]
-    )
+        return jsonify(
+            [
+                {
+                    "id": r.id,
+                    "name": f"Reservasi {r.id}: {r.stock.car.brand} {r.stock.car.model}",
+                    "status": r.status.name,
+                }
+                for r in data
+            ]
+        )
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/return", methods=["POST"])
-@login_required
 def return_reservation():
-    print(request.form)
-    id_ = request.form.get("id")
-    reservation = db.get_or_404(Reservation, id_)
+    if('user' in session):
+        print(request.form)
+        id_ = request.form.get("id")
+        reservation = db.get_or_404(Reservation, id_)
 
-    paid_payment_rents = (
-        Rent.query.where(Rent.reservation_id == id_)
-        .where(Rent.type == PaymentType.PAYMENT)
-        .where(Rent.status == RentStatus.PAID)
-        .all()
-    )
-
-    # Check if reservation has all been paid
-    if paid_payment_rents:
-        # Check if reservation is late and all charges have all been paid
-        if reservation.dropoff_datetime < datetime.now():
-            paid_charge_rents = (
-                Rent.query.where(Rent.reservation_id == id_)
-                .where(Rent.type == PaymentType.CHARGE)
-                .where(Rent.status == RentStatus.PAID)
-                .all()
-            )
-
-            # If late and no charges, create one
-            if not paid_charge_rents:
-                return redirect(url_for("admin_rent.create", id=id_, late=True))
-
-        # If payments are paid and no charges left, return
-        reservation_controller.return_reservation(id_)
-        return redirect(url_for("admin_reservation.read", id=id_))
-    else:
-        # If no payments
-        return redirect(
-            url_for(
-                "admin_rent.create",
-                id=id_,
-            )
+        paid_payment_rents = (
+            Rent.query.where(Rent.reservation_id == id_)
+            .where(Rent.type == PaymentType.PAYMENT)
+            .where(Rent.status == RentStatus.PAID)
+            .all()
         )
+
+        # Check if reservation has all been paid
+        if paid_payment_rents:
+            # Check if reservation is late and all charges have all been paid
+            if reservation.dropoff_datetime < datetime.now():
+                paid_charge_rents = (
+                    Rent.query.where(Rent.reservation_id == id_)
+                    .where(Rent.type == PaymentType.CHARGE)
+                    .where(Rent.status == RentStatus.PAID)
+                    .all()
+                )
+
+                # If late and no charges, create one
+                if not paid_charge_rents:
+                    return redirect(url_for("admin_rent.create", id=id_, late=True))
+
+            # If payments are paid and no charges left, return
+            reservation_controller.return_reservation(id_)
+            return redirect(url_for("admin_reservation.read", id=id_))
+        else:
+            # If no payments
+            return redirect(
+                url_for(
+                    "admin_rent.create",
+                    id=id_,
+                )
+            )
+    return render_template("admin/login.html")
 
 
 @admin_reservation_bp.route("/cancel", methods={"POST"})
-@login_required
 def cancel_reservation():
-    id_ = request.form.get("id")
-    reservation_controller.cancel_reservation(id_)
-    return redirect(url_for("admin_reservation.read"))
+    if('user' in session):
+        id_ = request.form.get("id")
+        reservation_controller.cancel_reservation(id_)
+        return redirect(url_for("admin_reservation.read"))
+    return render_template("admin/login.html")
 
 
 def get_user_selections():

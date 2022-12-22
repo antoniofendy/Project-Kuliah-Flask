@@ -1,7 +1,6 @@
 import os
 
-from flask import Blueprint, render_template, request, flash, url_for, redirect
-from flask_login import login_required
+from flask import Blueprint, render_template, request, flash, url_for, redirect, session
 
 from werkzeug.utils import secure_filename
 
@@ -26,138 +25,141 @@ def allowed_file(filename):
 
 @admin_md_car_bp.route("/", defaults={"id": None})
 @admin_md_car_bp.route("/<int:id>")
-@login_required
 def read(id):
-    if id:
-        form = CarForm()
-        data = car_controller.get(id)
-        form.transmission.default = data.transmission.name
-        form.fuel.default = data.fuel.name
+    if('user' in session):
+        if id:
+            form = CarForm()
+            data = car_controller.get(id)
+            form.transmission.default = data.transmission.name
+            form.fuel.default = data.fuel.name
 
-        form.process()
+            form.process()
 
-        return render_template("admin/master-data/car/form.html", form=form, data=data)
+            return render_template("admin/master-data/car/form.html", form=form, data=data)
 
-    return render_template(
-        "admin/master-data/car/list.html", data=car_controller.get_all()
-    )
+        return render_template(
+            "admin/master-data/car/list.html", data=car_controller.get_all()
+        )
+    return render_template("admin/login.html")
 
 
 @admin_md_car_bp.route("/create", methods=["GET", "POST"])
-@login_required
 def create():
-    if request.method == "POST":
+    if('user' in session):
+        if request.method == "POST":
 
-        file_ext = None
-        file = request.files["picture"]
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_ext = os.path.splitext(filename)[1]
-            file.save(
-                os.path.join(
-                    UPLOAD_FOLDER,
-                    "{fbrand}-{fmodel}-{ftype}{fext}".format(
+            file_ext = None
+            file = request.files["picture"]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_ext = os.path.splitext(filename)[1]
+                file.save(
+                    os.path.join(
+                        UPLOAD_FOLDER,
+                        "{fbrand}-{fmodel}-{ftype}{fext}".format(
+                            fbrand=request.form.get("brand"),
+                            fmodel=request.form.get("model"),
+                            ftype=request.form.get("type"),
+                            fext=file_ext,
+                        ),
+                    )
+                )
+
+            car_controller.create(
+                Car(
+                    model=request.form.get("model"),
+                    type=request.form.get("type"),
+                    brand=request.form.get("brand"),
+                    picture="{fbrand}-{fmodel}-{ftype}{fext}".format(
                         fbrand=request.form.get("brand"),
                         fmodel=request.form.get("model"),
                         ftype=request.form.get("type"),
                         fext=file_ext,
                     ),
+                    transmission=request.form.get("transmission"),
+                    seats=request.form.get("seats"),
+                    luggage=request.form.get("luggage"),
+                    fuel=request.form.get("fuel"),
                 )
             )
 
-        car_controller.create(
-            Car(
-                model=request.form.get("model"),
-                type=request.form.get("type"),
-                brand=request.form.get("brand"),
-                picture="{fbrand}-{fmodel}-{ftype}{fext}".format(
-                    fbrand=request.form.get("brand"),
-                    fmodel=request.form.get("model"),
-                    ftype=request.form.get("type"),
-                    fext=file_ext,
-                ),
-                transmission=request.form.get("transmission"),
-                seats=request.form.get("seats"),
-                luggage=request.form.get("luggage"),
-                fuel=request.form.get("fuel"),
-            )
-        )
+            flash("Mobil baru berhasil ditambahkan.", category="success")
+            return redirect(url_for("admin_md_car.read"))
 
-        flash("Mobil baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("admin_md_car.read"))
-
-    return render_template("admin/master-data/car/form.html", form=CarForm(), data=None)
+        return render_template("admin/master-data/car/form.html", form=CarForm(), data=None)
+    return render_template("admin/login.html")
 
 
 @admin_md_car_bp.route("/update", methods=["POST"])
-@login_required
 def update():
+    if('user' in session):
+        old_data = car_controller.get(request.form.get("id"))
 
-    old_data = car_controller.get(request.form.get("id"))
+        file = request.files["picture"]
 
-    file = request.files["picture"]
+        if file.filename != "":
+            file_ext = None
 
-    if file.filename != "":
-        file_ext = None
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_ext = os.path.splitext(filename)[1]
+                file.save(
+                    os.path.join(
+                        UPLOAD_FOLDER,
+                        "{fbrand}-{fmodel}-{ftype}{fext}".format(
+                            fbrand=request.form.get("brand"),
+                            fmodel=request.form.get("model"),
+                            ftype=request.form.get("type"),
+                            fext=file_ext,
+                        ),
+                    )
+                )
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_ext = os.path.splitext(filename)[1]
-            file.save(
-                os.path.join(
-                    UPLOAD_FOLDER,
-                    "{fbrand}-{fmodel}-{ftype}{fext}".format(
+            car_controller.update(
+                {
+                    "id": int(request.form.get("id")),
+                    "model": request.form.get("model"),
+                    "type": request.form.get("type"),
+                    "brand": request.form.get("brand"),
+                    "picture": "{fbrand}-{fmodel}-{ftype}{fext}".format(
                         fbrand=request.form.get("brand"),
                         fmodel=request.form.get("model"),
                         ftype=request.form.get("type"),
                         fext=file_ext,
                     ),
-                )
+                    "transmission": request.form.get("transmission"),
+                    "seats": request.form.get("seats"),
+                    "luggage": request.form.get("luggage"),
+                    "fuel": request.form.get("fuel"),
+                }
+            )
+        else:
+            car_controller.update(
+                {
+                    "id": int(request.form.get("id")),
+                    "model": request.form.get("model"),
+                    "type": request.form.get("type"),
+                    "brand": request.form.get("brand"),
+                    "picture": old_data.picture,
+                    "transmission": request.form.get("transmission"),
+                    "seats": request.form.get("seats"),
+                    "luggage": request.form.get("luggage"),
+                    "fuel": request.form.get("fuel"),
+                }
             )
 
-        car_controller.update(
-            {
-                "id": int(request.form.get("id")),
-                "model": request.form.get("model"),
-                "type": request.form.get("type"),
-                "brand": request.form.get("brand"),
-                "picture": "{fbrand}-{fmodel}-{ftype}{fext}".format(
-                    fbrand=request.form.get("brand"),
-                    fmodel=request.form.get("model"),
-                    ftype=request.form.get("type"),
-                    fext=file_ext,
-                ),
-                "transmission": request.form.get("transmission"),
-                "seats": request.form.get("seats"),
-                "luggage": request.form.get("luggage"),
-                "fuel": request.form.get("fuel"),
-            }
-        )
-    else:
-        car_controller.update(
-            {
-                "id": int(request.form.get("id")),
-                "model": request.form.get("model"),
-                "type": request.form.get("type"),
-                "brand": request.form.get("brand"),
-                "picture": old_data.picture,
-                "transmission": request.form.get("transmission"),
-                "seats": request.form.get("seats"),
-                "luggage": request.form.get("luggage"),
-                "fuel": request.form.get("fuel"),
-            }
-        )
-
-    flash("Mobil berhasil diubah.", category="primary")
-    return redirect(url_for("admin_md_car.read"))
+        flash("Mobil berhasil diubah.", category="primary")
+        return redirect(url_for("admin_md_car.read"))
+    return render_template("admin/login.html")
 
 
 @admin_md_car_bp.route("/delete", methods=["POST"])
-@login_required
 def delete():
-    id_ = request.form.get("id")
+    if('user' in session):
+        id_ = request.form.get("id")
 
-    car_controller.delete(id_)
+        car_controller.delete(id_)
 
-    flash("Mobil berhasil dihapus.", category="info")
-    return redirect(url_for("admin_md_car.read"))
+        flash("Mobil berhasil dihapus.", category="info")
+        return redirect(url_for("admin_md_car.read"))
+    return render_template("admin/login.html")

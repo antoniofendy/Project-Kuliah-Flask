@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
-from flask_login import login_required
+from flask import Blueprint, render_template, request, flash, url_for, redirect,session
 
 from kelompok_1_uas.admin.forms.charge_rule import ChargeRuleForm
 from kelompok_1_uas.admin.controllers import charge_rule as charge_rule_controller
@@ -15,69 +14,73 @@ admin_charge_rule_bp = Blueprint(
 
 @admin_charge_rule_bp.route("/", defaults={"id": None})
 @admin_charge_rule_bp.route("/<int:id>")
-@login_required
 def read(id):
-    if id:
-        form = ChargeRuleForm()
-        data = charge_rule_controller.get(id)
+    if('user' in session):
+        if id:
+            form = ChargeRuleForm()
+            data = charge_rule_controller.get(id)
 
-        # Remove default "empty" choice
-        form.type.choices = [("PERCENTAGE", "Persentase"), ("NOMINAL", "Nominal")]
+            # Remove default "empty" choice
+            form.type.choices = [("PERCENTAGE", "Persentase"), ("NOMINAL", "Nominal")]
 
-        # Set selected charge rule type
-        form.type.default = data.type.name
+            # Set selected charge rule type
+            form.type.default = data.type.name
 
-        form.process()
+            form.process()
 
-        return render_template("admin/charge_rule/form.html", form=form, data=data)
+            return render_template("admin/charge_rule/form.html", form=form, data=data)
 
-    return render_template(
-        "admin/charge_rule/list.html", data=charge_rule_controller.get_all()
-    )
+        return render_template(
+            "admin/charge_rule/list.html", data=charge_rule_controller.get_all()
+        )
+    return render_template("admin/login.html")
 
 
 @admin_charge_rule_bp.route("/create", methods=["GET", "POST"])
-@login_required
 def create():
-    if request.method == "POST":
-        charge_rule_controller.create(
-            ChargeRule(
-                name=request.form.get("name"),
-                amount=request.form.get("amount"),
-                type=request.form.get("type"),
+    if('user' in session):
+        if request.method == "POST":
+            charge_rule_controller.create(
+                ChargeRule(
+                    name=request.form.get("name"),
+                    amount=request.form.get("amount"),
+                    type=request.form.get("type"),
+                )
             )
+
+            flash("Aturan denda baru berhasil ditambahkan.", category="success")
+            return redirect(url_for("admin_charge_rule.read"))
+
+        return render_template(
+            "admin/charge_rule/form.html", form=ChargeRuleForm(), data=None
         )
-
-        flash("Aturan denda baru berhasil ditambahkan.", category="success")
-        return redirect(url_for("admin_charge_rule.read"))
-
-    return render_template(
-        "admin/charge_rule/form.html", form=ChargeRuleForm(), data=None
-    )
+    return render_template("admin/login.html")
 
 
 @admin_charge_rule_bp.route("/update", methods=["POST"])
-@login_required
 def update():
-    data = {
-        "id": request.form.get("id"),
-        "name": request.form.get("name"),
-        "amount": request.form.get("amount"),
-        "type": request.form.get("type"),
-    }
+    if('user' in session):
+        data = {
+            "id": request.form.get("id"),
+            "name": request.form.get("name"),
+            "amount": request.form.get("amount"),
+            "type": request.form.get("type"),
+        }
 
-    charge_rule_controller.update(data)
+        charge_rule_controller.update(data)
 
-    flash("Aturan denda berhasil diubah.", category="primary")
-    return redirect(url_for("admin_charge_rule.read"))
+        flash("Aturan denda berhasil diubah.", category="primary")
+        return redirect(url_for("admin_charge_rule.read"))
+    return render_template("admin/login.html")
 
 
 @admin_charge_rule_bp.route("/delete", methods=["POST"])
-@login_required
 def delete():
-    id_ = request.form.get("id")
+    if('user' in session):
+        id_ = request.form.get("id")
 
-    charge_rule_controller.delete(id_)
+        charge_rule_controller.delete(id_)
 
-    flash("Aturan denda berhasil dihapus.", category="info")
-    return redirect(url_for("admin_charge_rule.read"))
+        flash("Aturan denda berhasil dihapus.", category="info")
+        return redirect(url_for("admin_charge_rule.read"))
+    return render_template("admin/login.html")

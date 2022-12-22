@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template
-from flask_login import login_required
+from flask import Blueprint, render_template, session
+from kelompok_1_uas.admin.models.admin import Admin
 
 admin_main_bp = Blueprint(
     "admin_main",
@@ -10,6 +10,9 @@ admin_main_bp = Blueprint(
 
 
 @admin_main_bp.route("/")
-@login_required
 def index():
-    return render_template("admin/index.html")
+    # admin = Admin.query.filter_by(id=session['user']).first()
+    if('user' in session):
+        return render_template("admin/index.html")
+
+    return render_template("admin/login.html")

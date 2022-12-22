@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
-from flask_login import login_user, logout_user
+from flask import Blueprint, render_template, request, flash, url_for, redirect, session
 
 from kelompok_1_uas.admin.forms.admin import AdminForm
 from kelompok_1_uas.admin.controllers import admin as admin_controller
@@ -27,7 +26,7 @@ def login():
             flash("Periksa kembali email dan password Anda.", category="danger")
             return redirect(url_for("admin_auth.login"))
 
-        login_user(admin, remember=remember)
+        session['user'] = admin.id
         return redirect(url_for("admin_main.index"))
 
     return render_template("admin/login.html")
@@ -35,5 +34,5 @@ def login():
 
 @auth_bp.route("/logout")
 def logout():
-    logout_user()
+    session.pop('user')
     return redirect(url_for("admin_main.index"))
